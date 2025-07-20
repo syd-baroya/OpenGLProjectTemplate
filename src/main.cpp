@@ -13,7 +13,7 @@ int main(void)
     windowManager->init(800, 800);
     windowManager->setEventCallbacks(application);
 
-    application->initObjects();
+    application->init();
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(windowManager->getHandle()))

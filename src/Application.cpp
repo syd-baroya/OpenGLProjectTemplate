@@ -1,6 +1,15 @@
 #include "Application.h"
 
 
+void Application::init() {
+    initShaders();
+    initObjects();
+}
+
+void Application::initShaders() {
+    defaultShader = new ShaderProgram("../resources/default.vert", "../resources/default.frag");
+}
+
 void Application::initObjects() {
     square = new Square();
 }
@@ -8,11 +17,14 @@ void Application::update() {
 
 }
 void Application::render() {
+    defaultShader->bind();
     square->render();
+    defaultShader->unbind();
 }
 
 void Application::destroy() {
     square->destroy();
+    defaultShader->destroy();
 }
 
 void Application::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)

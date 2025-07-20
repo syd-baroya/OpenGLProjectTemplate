@@ -23,7 +23,6 @@ public:
 
 	std::string name = "";
 
-	ShaderProgram* shaderProgram;
 };
 
 #endif

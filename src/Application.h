@@ -9,6 +9,8 @@ class Application : public EventCallbacks
 {
 
 	public:
+		void init();
+		void initShaders();
 		void initObjects();
 		void update();
 		void render();
@@ -27,6 +29,8 @@ class Application : public EventCallbacks
 
 private:
 	SceneObject* square;
+
+	ShaderProgram* defaultShader;
 
 };
 
