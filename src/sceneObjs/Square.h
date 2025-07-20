@@ -13,7 +13,7 @@ class Square : public SceneObject {
 
 public:
     Square () { 
-        shaderProgram = new Shader("../resources/default.vert", "../resources/default.frag");
+        shaderProgram = new ShaderProgram("../resources/default.vert", "../resources/default.frag");
 
         // Generates Vertex Array Object and binds it
         vao = new VAO();

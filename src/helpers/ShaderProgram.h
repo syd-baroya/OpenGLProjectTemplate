@@ -11,12 +11,12 @@
 
 std::string get_file_contents(const std::string &filename);
 
-class Shader {
+class ShaderProgram {
 	public:
 		// Reference ID of the Shader Program
 		GLuint ID;
 		// Constructor that build the Shader Program from 2 different shaders
-		Shader(const std::string& vertexFile, const std::string& fragmentFile);
+		ShaderProgram(const std::string& vertexFile, const std::string& fragmentFile);
 
 		void bind();
 		void unbind();

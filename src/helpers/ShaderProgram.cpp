@@ -1,4 +1,4 @@
-#include "Shader.h"
+#include "ShaderProgram.h"
 
 // Reads a text file and outputs a string with everything in the text file
 std::string get_file_contents(const std::string &filename)
@@ -19,7 +19,7 @@ std::string get_file_contents(const std::string &filename)
 }
 
 // Constructor that build the Shader Program from 2 different shaders
-Shader::Shader(const std::string &vertexFile, const std::string &fragmentFile)
+ShaderProgram::ShaderProgram(const std::string &vertexFile, const std::string &fragmentFile)
 {
 	vShaderName = vertexFile;
 	fShaderName = fragmentFile;
@@ -42,7 +42,7 @@ Shader::Shader(const std::string &vertexFile, const std::string &fragmentFile)
 	glDeleteShader(fragmentShader);
 }
 
-GLuint Shader::createShader(const std::string& path, GLenum shaderType) {
+GLuint ShaderProgram::createShader(const std::string& path, GLenum shaderType) {
 	// Read vertexFile and fragmentFile and store the strings
 	std::string shaderCode = get_file_contents(path);
 
@@ -62,24 +62,24 @@ GLuint Shader::createShader(const std::string& path, GLenum shaderType) {
 }
 
 // Activates the Shader Program
-void Shader::bind()
+void ShaderProgram::bind()
 {
 	glUseProgram(ID);
 }
 
-void Shader::unbind()
+void ShaderProgram::unbind()
 {
 	glUseProgram(0);
 }
 
 // Deletes the Shader Program
-void Shader::destroy()
+void ShaderProgram::destroy()
 {
 	glDeleteProgram(ID);
 }
 
 // Checks if the different Shaders have compiled properly
-void Shader::compileErrors(unsigned int shader, const char* type)
+void ShaderProgram::compileErrors(unsigned int shader, const char* type)
 {
 	// Stores status of compilation
 	GLint hasCompiled;
@@ -105,7 +105,7 @@ void Shader::compileErrors(unsigned int shader, const char* type)
 	}
 }
 
-std::string Shader::getShaderTypeAsString(GLenum shaderType) {
+std::string ShaderProgram::getShaderTypeAsString(GLenum shaderType) {
 	std::string result;
 
 	switch (shaderType) {

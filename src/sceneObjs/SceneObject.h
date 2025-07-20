@@ -5,7 +5,7 @@
 
 #include <glm/glm.hpp>
 #include <iostream>
-#include "../helpers/Shader.h"
+#include "../helpers/ShaderProgram.h"
 
 class SceneObject {
 
@@ -23,7 +23,7 @@ public:
 
 	std::string name = "";
 
-	Shader* shaderProgram;
+	ShaderProgram* shaderProgram;
 };
 
 #endif
