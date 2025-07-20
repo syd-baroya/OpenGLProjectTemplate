@@ -1,0 +1,23 @@
+# Visual Studio generated files
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.suo
+.vs/
+
+# Build directories
+[Bb]uild/
+[Bb]uilds/
+build/
+builds/
+x64/
+Debug/
+Release/
+bin/
+
+# Other
+OpenGLPr.82fe2e42/
+OpenGLProjectTemplate/x64/
+*.user
+CMakeCache.txt
