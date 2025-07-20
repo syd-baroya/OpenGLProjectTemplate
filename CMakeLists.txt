@@ -23,10 +23,15 @@ file(GLOB_RECURSE HEADERS "src/*.h" "src/helpers/*.h" "src/sceneObjects/*.h" "sr
 file(GLOB_RECURSE GLSL_SOURCE_FILES "resources/*.glsl" "resources/*.vert" "resources/*.frag")
 
 # Set the executable.
-add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS} ${GLSL_SOURCE_FILES})
+add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS} ${GLSL_SOURCE_FILES} dep/glad.c dep/stb_image.cpp)
+
+set_source_files_properties(dep/stb_image.cpp PROPERTIES LANGUAGE CXX)
 
 # Group GLSL files under a "Resource Files" filter in Visual Studio
 source_group("Resource Files" FILES ${GLSL_SOURCE_FILES})
+
+# Group these dependency files into a "Library Files" filter in IDEs
+source_group("Library Source Files" FILES "${CMAKE_SOURCE_DIR}/dep/glad.c" "${CMAKE_SOURCE_DIR}/dep/stb_image.cpp")
 
 # Helper function included from FindGfxLibs.cmake
 findGLFW3(${CMAKE_PROJECT_NAME})
@@ -34,7 +39,7 @@ findGLM(${CMAKE_PROJECT_NAME})
 
 # OS specific options and libraries
 if(WIN32)
-    target_link_libraries(${CMAKE_PROJECT_NAME} opengl32.lib)
+    target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC opengl32.lib)
 else()
     message(STATUS "Adding GCC style compiler flags")
     add_compile_options("-Wall" "-pedantic" "-Werror=return-type")
@@ -44,10 +49,10 @@ else()
         find_library(IOKIT_FRAMEWORK IOKit)
         find_library(COREVIDEO_FRAMEWORK CoreVideo)
         find_library(OPENGL_FRAMEWORK OpenGL)
-        target_link_libraries(${CMAKE_PROJECT_NAME} ${COCOA_FRAMEWORK} ${IOKIT_FRAMEWORK} ${COREVIDEO_FRAMEWORK} ${OPENGL_FRAMEWORK})
+        target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${COCOA_FRAMEWORK} ${IOKIT_FRAMEWORK} ${COREVIDEO_FRAMEWORK} ${OPENGL_FRAMEWORK})
     else()
         # Assumes linux
-        target_link_libraries(${CMAKE_PROJECT_NAME} GL dl)
+                target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC GL dl)
     endif()
 endif()
 

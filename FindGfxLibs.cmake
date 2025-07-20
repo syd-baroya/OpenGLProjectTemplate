@@ -59,7 +59,7 @@ function(findGLFW3 target)
     if(glfw3_FOUND)
 
         # Include paths are added automatically by the glfw3 find_package
-        target_link_libraries(${CMAKE_PROJECT_NAME} glfw)
+        target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC glfw)
 
     elseif(DEFINED ENV{GLFW_DIR})
 
@@ -76,15 +76,15 @@ function(findGLFW3 target)
 
         if(GLFW_LIBRARIES)
             target_include_directories(${target} PUBLIC "${GLFW_DIR}/include")
-            target_link_libraries(${target} "${GLFW_LIBRARIES}")
+            target_link_libraries(${target} PUBLIC "${GLFW_LIBRARIES}")
         else()
-            message(FATAL_ERROR "Internal Error! GLFW_LIBRARIES variable did not get set! Contact your TA, this is their fault.")
+            message(FATAL_ERROR "Internal Error! GLFW_LIBRARIES variable did not get set!")
         endif()
 
     elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/dep/include/GLFW/glfw3.h" AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/dep/lib/glfw3.lib")
         message(STATUS "Found GLFW in local dep/ directory.")
         target_include_directories(${target} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/dep/include")
-        target_link_libraries(${target} "${CMAKE_CURRENT_SOURCE_DIR}/dep/lib/glfw3.lib")
+        target_link_libraries(${target} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/dep/lib/glfw3.lib")
 
     else()
         message(FATAL_ERROR "glfw3 could not be found through find_package or environment varaible 'GLFW_DIR'! glfw3 must be installed!")
@@ -109,49 +109,3 @@ function(findGLM target)
     endif()
     
 endfunction(findGLM)
-
-
-#find and add assimp dir using environment variable
-function(findAssimp target)
-
-    find_package(assimp QUIET)
-
-    if(DEFINED ENV{ASSIMP_DIR})
-        set(ASSIMP_DIR "$ENV{ASSIMP_DIR}")
-        message(STATUS "Assimp environment variable found. Attempting use...")
-
-        target_include_directories(${target} PUBLIC "${ASSIMP_DIR}/include")
-        target_include_directories(${target} PUBLIC "${ASSIMP_DIR}/build/include")
-        target_link_libraries(${target} "/usr/local/Cellar/assimp/5.0.1/lib/libassimp.5.0.0.dylib")
-        message(STATUS "${ASSIMP_LIBRARIES}")
-    else()
-        message(FATAL_ERROR "Assimp could not be found through find_package or environment varaible 'ASSIMP_DIR'! Assimp must be installed!")
-    endif()
-
-endfunction(findAssimp)
-
-
-#find and add freetype dir using environment variable
-function(findFreetype target)
-
-    find_package(Freetype QUIET)
-
-    if(DEFINED ENV{FREETYPE_DIR})
-        set(FREETYPE_DIR "$ENV{FREETYPE_DIR}")
-        message(STATUS "Freetype environment variable found. Attempting use...")
-
-        target_include_directories(${target} PUBLIC "${FREETYPE_DIR}/include")
-        target_include_directories(${target} PUBLIC "${FREETYPE_DIR}/build/include")
-        target_link_libraries(${target} "${FREETYPE_DIR}/lib/libfreetype.dylib")
-
-        message(STATUS "${FREETYPE_LIBRARIES}")
-    else()
-        message(FATAL_ERROR "Freetype could not be found through find_package or environment varaible 'FREETYPE_DIR'! Freetype must be installed!")
-    endif()
-endfunction(findFreetype)
-
-
-function(findBullet target)
-    find_package(bullet)
-endfunction(findBullet)
-    
