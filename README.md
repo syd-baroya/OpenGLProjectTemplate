@@ -36,10 +36,14 @@ This repository provides a basic OpenGL project template or skeleton, designed t
         ```bash
         cmake ..
         ```
-        (I used "Visual Studio 17 2022" and "x64". You may need to use and change "cmake .. -G "Visual Studio 17 2022" -A x64" based on your Visual Studio version and desired architecture.)
-    *   **On Linux/macOS (Makefiles):**
+      * or (with specific VS version and architecture)
         ```bash
-        cmake ..
+        cmake .. -G "Visual Studio 17 2022" -A x64
+        ```
+        (I used "Visual Studio 17 2022" and "x64". You may need to change this based on your Visual Studio version and desired architecture.)
+    *   **On macOS (Makefiles):**
+        ```bash
+        cmake -G Xcode ..
         ```
 
 3.  **Build the project:**
