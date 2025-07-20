@@ -54,40 +54,12 @@ endfunction(_findGLFW3_sourcepkg)
 # Find and add GLFW3 using find_package or environment variable 
 function(findGLFW3 target)
 
-    find_package(glfw3 QUIET)
-
-    if(glfw3_FOUND)
-
-        # Include paths are added automatically by the glfw3 find_package
-        target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC glfw)
-
-    elseif(DEFINED ENV{GLFW_DIR})
-
-        set(GLFW_DIR "$ENV{GLFW_DIR}")
-        message(STATUS "GLFW environment variable found. Attempting use...")
-
-        if(NOT EXISTS "${GLFW_DIR}/CMakeLists.txt" AND WIN32)
-            _findGLFW3_vsbinary(target) 
-        elseif(EXISTS "${GLFW_DIR}/CMakeLists.txt")
-            _findGLFW3_sourcepkg(target)
-        else()
-            message(FATAL_ERROR "GLFW environment variable 'GLFW_DIR' found, but points to a directory which is not a source package containing 'CMakeLists.txt'.")
-        endif()
-
-        if(GLFW_LIBRARIES)
-            target_include_directories(${target} PUBLIC "${GLFW_DIR}/include")
-            target_link_libraries(${target} PUBLIC "${GLFW_LIBRARIES}")
-        else()
-            message(FATAL_ERROR "Internal Error! GLFW_LIBRARIES variable did not get set!")
-        endif()
-
-    elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/dep/include/GLFW/glfw3.h" AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/dep/lib/glfw3.lib")
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/dep/include/GLFW/glfw3.h" AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/dep/lib/glfw3.lib")
         message(STATUS "Found GLFW in local dep/ directory.")
         target_include_directories(${target} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/dep/include")
         target_link_libraries(${target} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/dep/lib/glfw3.lib")
-
     else()
-        message(FATAL_ERROR "glfw3 could not be found through find_package or environment varaible 'GLFW_DIR'! glfw3 must be installed!")
+        message(FATAL_ERROR "GLFW not found in local dep/ directory. Please ensure it's present or installed system-wide.")
     endif()
 
 endfunction(findGLFW3)
@@ -95,17 +67,11 @@ endfunction(findGLFW3)
 # Find and add GLM using find_package or environment variable 
 function(findGLM target)
 
-    find_package(glm QUIET)
-
-    if(NOT glm_FOUND)
-        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/dep/include/glm/glm.hpp")
-            message(STATUS "Found GLM in local dep/ directory.")
-            target_include_directories(${target} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/dep/include")
-        else()
-            message(WARNING "glm could not be found through find_package or environment variable 'GLM_INCLUDE_DIR'! glm must be installed!")
-        endif()
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/dep/include/glm/glm.hpp")
+        message(STATUS "Found GLM in local dep/ directory.")
+        target_include_directories(${target} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/dep/include")
     else()
-        target_include_directories(${target} PUBLIC ${glm_INCLUDE_DIRS})
+        message(FATAL_ERROR "GLM not found in local dep/ directory. Please ensure it's present or installed system-wide.")
     endif()
     
 endfunction(findGLM)
