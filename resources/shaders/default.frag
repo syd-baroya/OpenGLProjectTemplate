@@ -9,12 +9,13 @@ in vec3 color;
 // Inputs the texture coordinates from the Vertex Shader
 in vec2 texCoord;
 
-// Gets the Texture Unit from the main function
+// Gets the Texture Unit
 uniform sampler2D tex0;
-
+uniform sampler2D tex1;
 
 void main()
 {
-	glColor = vec4(color, 1.0f);
+	//glColor = vec4(color, 1.0f);
 	//glColor = texture(tex0, texCoord);
+	glColor = mix(texture(tex0, texCoord), texture(tex1, texCoord), 0.2);
 }

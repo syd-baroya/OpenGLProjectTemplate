@@ -2,14 +2,19 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include<filesystem>
+namespace fs = std::filesystem;
+
 #include "WindowManager.h"
 #include "sceneObjs/Square.h"
+#include "helpers/Texture.h"
 
 class Application : public EventCallbacks
 {
 
 	public:
 		void init();
+		void initTextures();
 		void initShaders();
 		void initObjects();
 		void update();
@@ -31,6 +36,14 @@ private:
 	SceneObject* square;
 
 	ShaderProgram* defaultShader;
+
+	Texture* woodTexture;
+	Texture* happyFaceTexture;
+
+	std::string texturesDir = "../resources/images/";
+	std::string shadersDir = "../resources/shaders/";
+
+	GLuint uniID;
 
 };
 

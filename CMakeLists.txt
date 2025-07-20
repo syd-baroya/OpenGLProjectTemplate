@@ -20,7 +20,7 @@ file(GLOB_RECURSE SOURCES "src/*.cpp" "src/helpers/*.cpp" "src/sceneObjects/*.cp
 # We don't really need to include header and resource files to build, but it's
 # nice to have them show up in IDEs.
 file(GLOB_RECURSE HEADERS "src/*.h" "src/helpers/*.h" "src/sceneObjects/*.h" "src/*/*.h")
-file(GLOB_RECURSE GLSL_SOURCE_FILES "resources/*.glsl" "resources/*.vert" "resources/*.frag")
+file(GLOB_RECURSE GLSL_SOURCE_FILES "resources/shaders/*.glsl" "resources/shaders/*.vert" "resources/shaders/*.frag")
 
 # Set the executable.
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS} ${GLSL_SOURCE_FILES} dep/glad.c dep/stb_image.cpp)
