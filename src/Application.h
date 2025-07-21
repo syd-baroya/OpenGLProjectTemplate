@@ -7,13 +7,15 @@ namespace fs = std::filesystem;
 
 #include "WindowManager.h"
 #include "sceneObjs/Square.h"
+#include "sceneObjs/Pyramid.h"
 #include "helpers/Texture.h"
+#include <glm/glm.hpp>
 
 class Application : public EventCallbacks
 {
 
 	public:
-		void init();
+		void init(unsigned int width, unsigned int height);
 		void initTextures();
 		void initShaders();
 		void initObjects();
@@ -34,8 +36,10 @@ class Application : public EventCallbacks
 
 private:
 	SceneObject* square;
+	SceneObject* pyramid;
 
-	ShaderProgram* defaultShader;
+	ShaderProgram* pyramidShader;
+	ShaderProgram* squareShader;
 
 	Texture* woodTexture;
 	Texture* happyFaceTexture;
@@ -44,7 +48,9 @@ private:
 	std::string shadersDir = "../resources/shaders/";
 
 	GLuint uniID;
-
+	unsigned int width, height;
+	float rotation;
+	double prevTime;
 };
 
 #endif

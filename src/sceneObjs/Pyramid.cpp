@@ -1,6 +1,6 @@
-#include "Square.h"
+#include "Pyramid.h"
 
-Square::Square() {
+Pyramid::Pyramid() {
     // Generates Vertex Array Object and binds it
     vao = new VAO();
     vao->bind();
@@ -21,13 +21,15 @@ Square::Square() {
     ebo->unbind();
 }
 
-void Square::update(float rotation, float aspect, GLuint shaderID) {
+void Pyramid::update(float rotation, float aspect, GLuint shaderID) {
+
     // Initializes matrices so they are not the null matrix
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 proj = glm::mat4(1.0f);
 
     // Assigns different transformations to each matrix
+    model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
     view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
     proj = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 100.0f);
 
@@ -40,13 +42,13 @@ void Square::update(float rotation, float aspect, GLuint shaderID) {
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
 }
 
-void Square::render() {
+void Pyramid::render() {
     vao->bind();
     // Draw primitives, number of indices, datatype of indices, index of indices
     glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 }
 
-void Square::destroy() {
+void Pyramid::destroy() {
     vao->destroy();
     vbo->destroy();
     ebo->destroy();

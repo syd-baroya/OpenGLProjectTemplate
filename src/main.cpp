@@ -3,6 +3,8 @@
 #include "WindowManager.h"
 #include "Application.h"
 
+const unsigned int width = 800;
+const unsigned int height = 800;
 
 int main(void)
 {
@@ -10,19 +12,21 @@ int main(void)
     Application* application = new Application();
     WindowManager* windowManager = new WindowManager();
 
-    windowManager->init(800, 800);
+    windowManager->init(width, height);
     windowManager->setEventCallbacks(application);
 
-    application->init();
+    application->init(width, height);
+
+    glEnable(GL_DEPTH_TEST);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(windowManager->getHandle()))
     {
         /* Render here */
         glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Bind the VAO so OpenGL knows to use it
+        application->update();
         application->render();
 
         /* Swap front and back buffers */

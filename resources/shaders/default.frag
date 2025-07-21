@@ -15,7 +15,7 @@ uniform sampler2D tex1;
 
 void main()
 {
-	//glColor = vec4(color, 1.0f);
+	glColor = vec4(color, 1.0f);
 	//glColor = texture(tex0, texCoord);
-	glColor = mix(texture(tex0, texCoord), texture(tex1, texCoord), 0.2);
+	//glColor = mix(texture(tex0, texCoord), texture(tex1, texCoord), 0.2);
 }

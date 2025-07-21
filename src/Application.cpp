@@ -1,50 +1,84 @@
 #include "Application.h"
 
 
-void Application::init() {
+void Application::init(unsigned int width, unsigned int height) {
+    this->width = width;
+    this->height = height;
+    // Variables that help the rotation of the pyramid
+    this->rotation = 0.0f;
+    this->prevTime = glfwGetTime();
     initShaders();
     initTextures();
     initObjects();
 }
 
 void Application::initTextures() {
-    woodTexture = new Texture((texturesDir + "woodContainer.jpg").c_str(), "diffuse", 0);
-    happyFaceTexture = new Texture((texturesDir + "awesomeface.png").c_str(), "diffuse", 1);
-    woodTexture->assign(defaultShader, "tex0");
-    happyFaceTexture->assign(defaultShader, "tex1");
+    this->woodTexture = new Texture((texturesDir + "woodContainer.jpg").c_str(), "diffuse", 0);
+    this->happyFaceTexture = new Texture((texturesDir + "awesomeface.png").c_str(), "diffuse", 1);
+
+    this->woodTexture->assign(pyramidShader, "tex0");
+    this->happyFaceTexture->assign(pyramidShader, "tex1");
+
+    this->woodTexture->assign(squareShader, "tex0");
+    this->happyFaceTexture->assign(squareShader, "tex1");
 
 }
 
 void Application::initShaders() {
-    defaultShader = new ShaderProgram(shadersDir + "default.vert", shadersDir + "default.frag");
+    this->pyramidShader = new ShaderProgram(shadersDir + "default.vert", shadersDir + "default.frag");
+    this->squareShader = new ShaderProgram(shadersDir + "default.vert", shadersDir + "default.frag");
 
     // Gets ID of uniform called "scale"
-    uniID = glGetUniformLocation(defaultShader->ID, "scale");
+    this->uniID = glGetUniformLocation(pyramidShader->ID, "scale");
 }
 
 void Application::initObjects() {
-    square = new Square();
+    this->square = new Square();
+    this->pyramid = new Pyramid();
 }
 void Application::update() {
+    // Simple timer
+    double crntTime = glfwGetTime();
+    if (crntTime - this->prevTime >= 1 / 60)
+    {
+        this->rotation += 0.5f;
+        this->prevTime = crntTime;
+    }
+    this->squareShader->bind();
+    this->square->update(this->rotation, (float)this->width / this->height, this->squareShader->ID);
+    this->squareShader->unbind();
 
+    this->pyramidShader->bind();
+    this->pyramid->update(this->rotation, (float)this->width / this->height, this->pyramidShader->ID);
+    this->pyramidShader->unbind();
 }
 void Application::render() {
-    defaultShader->bind();
+    this->pyramidShader->bind();
     // Assigns a value to the uniform; NOTE: Must always be done after activating the Shader Program
     glUniform1f(uniID, 0.5f);
-    woodTexture->bind();
-    happyFaceTexture->bind();
-    square->render();
-    woodTexture->unbind();
-    happyFaceTexture->unbind();
-    defaultShader->unbind();
+    this->woodTexture->bind();
+    this->happyFaceTexture->bind();
+    this->pyramid->render();
+    this->woodTexture->unbind();
+    this->happyFaceTexture->unbind();
+    this->pyramidShader->unbind();
+
+    this->squareShader->bind();
+    this->woodTexture->bind();
+    this->happyFaceTexture->bind();
+    this->square->render();
+    this->woodTexture->unbind();
+    this->happyFaceTexture->unbind();
+    this->squareShader->unbind();
 }
 
 void Application::destroy() {
-    square->destroy();
-    woodTexture->destroy();
-    happyFaceTexture->destroy();
-    defaultShader->destroy();
+    this->square->destroy();
+    this->pyramid->destroy();
+    this->woodTexture->destroy();
+    this->happyFaceTexture->destroy();
+    this->pyramidShader->destroy();
+    this->squareShader->destroy();
 }
 
 void Application::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)

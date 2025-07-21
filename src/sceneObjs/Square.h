@@ -14,7 +14,7 @@ class Square : public SceneObject {
 public:
     Square();
 
-    void update();
+    void update(float rotation, float aspect, GLuint shaderID);
 
     void render();
 
