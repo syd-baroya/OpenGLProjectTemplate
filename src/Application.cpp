@@ -1,12 +1,32 @@
 #include "Application.h"
 
 
+Time::Time() {
+    this->currTime = glfwGetTime();
+    this->prevTime = this->currTime;
+    this->deltaTime = 0.0;
+}
+
+void Time::update() {
+    // Simple timer
+    this->currTime = glfwGetTime();
+    this->deltaTime = this->currTime - this->prevTime;
+    if (this->deltaTime >= 1 / 60)
+    {
+        this->prevTime = this->currTime;
+    }
+}
+
+double Time::getDelta() {
+    return this->deltaTime;
+}
+
 void Application::init(unsigned int width, unsigned int height) {
+    this->time = new Time();
+    this->camera = new Camera(width, height, PERSPECTIVE);
     this->width = width;
     this->height = height;
-    // Variables that help the rotation of the pyramid
-    this->rotation = 0.0f;
-    this->prevTime = glfwGetTime();
+
     initShaders();
     initTextures();
     initObjects();
@@ -18,18 +38,10 @@ void Application::initTextures() {
 
     this->woodTexture->assign(pyramidShader, "tex0");
     this->happyFaceTexture->assign(pyramidShader, "tex1");
-
-    this->woodTexture->assign(squareShader, "tex0");
-    this->happyFaceTexture->assign(squareShader, "tex1");
-
 }
 
 void Application::initShaders() {
     this->pyramidShader = new ShaderProgram(shadersDir + "default.vert", shadersDir + "default.frag");
-    this->squareShader = new ShaderProgram(shadersDir + "default.vert", shadersDir + "default.frag");
-
-    // Gets ID of uniform called "scale"
-    this->uniID = glGetUniformLocation(pyramidShader->ID, "scale");
 }
 
 void Application::initObjects() {
@@ -37,39 +49,38 @@ void Application::initObjects() {
     this->pyramid = new Pyramid();
 }
 void Application::update() {
-    // Simple timer
-    double crntTime = glfwGetTime();
-    if (crntTime - this->prevTime >= 1 / 60)
-    {
-        this->rotation += 0.5f;
-        this->prevTime = crntTime;
-    }
-    this->squareShader->bind();
-    this->square->update(this->rotation, (float)this->width / this->height, this->squareShader->ID);
-    this->squareShader->unbind();
+    this->time->update();
 
-    this->pyramidShader->bind();
-    this->pyramid->update(this->rotation, (float)this->width / this->height, this->pyramidShader->ID);
-    this->pyramidShader->unbind();
+    double delta = this->time->getDelta();
+    this->square->update(delta);
+    this->pyramid->update(delta);
 }
+
 void Application::render() {
     this->pyramidShader->bind();
-    // Assigns a value to the uniform; NOTE: Must always be done after activating the Shader Program
-    glUniform1f(uniID, 0.5f);
-    this->woodTexture->bind();
-    this->happyFaceTexture->bind();
-    this->pyramid->render();
-    this->woodTexture->unbind();
-    this->happyFaceTexture->unbind();
-    this->pyramidShader->unbind();
 
-    this->squareShader->bind();
     this->woodTexture->bind();
     this->happyFaceTexture->bind();
+
+    const glm::mat4 projMat = this->camera->getProjectionMatrix();
+    const glm::mat4 viewMat = this->camera->getViewMatrix();
+    glm::mat4 modelMat;
+
+    this->pyramidShader->setMat4("view", viewMat);
+    this->pyramidShader->setMat4("proj", projMat);
+
+    modelMat = this->square->getModelMatrix();
+    this->pyramidShader->setMat4("model", modelMat);
     this->square->render();
+
+    modelMat = this->pyramid->getModelMatrix();
+    this->pyramidShader->setMat4("model", modelMat);
+    this->pyramid->render();
+
     this->woodTexture->unbind();
     this->happyFaceTexture->unbind();
-    this->squareShader->unbind();
+
+    this->pyramidShader->unbind();
 }
 
 void Application::destroy() {
@@ -78,13 +89,42 @@ void Application::destroy() {
     this->woodTexture->destroy();
     this->happyFaceTexture->destroy();
     this->pyramidShader->destroy();
-    this->squareShader->destroy();
 }
 
 void Application::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     // used keys: escape z
-    
+    if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+        this->camera->processMovement(FORWARD, this->time->getDelta());
+    }
+    if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+        this->camera->processMovement(BACKWARD, this->time->getDelta());
+    }
+    if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+        this->camera->processMovement(LEFT, this->time->getDelta());
+    }
+    if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+        this->camera->processMovement(RIGHT, this->time->getDelta());
+    }
+    if (key == GLFW_KEY_E && action == GLFW_PRESS) {
+        this->camera->processMovement(UP, this->time->getDelta());
+    }
+    if (key == GLFW_KEY_C && action == GLFW_PRESS) {
+        this->camera->processMovement(DOWN, this->time->getDelta());
+    }
+    if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
+        this->camera->processLook(LOOK_UP, this->time->getDelta());
+    }
+    if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
+        this->camera->processLook(LOOK_DOWN, this->time->getDelta());
+    }
+    if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
+        this->camera->processLook(LOOK_LEFT, this->time->getDelta());
+    }
+    if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
+        this->camera->processLook(LOOK_RIGHT, this->time->getDelta());
+    }
+
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
@@ -99,7 +139,7 @@ void Application::keyCallback(GLFWwindow* window, int key, int scancode, int act
 
 void Application::scrollCallback(GLFWwindow* window, double deltaX, double deltaY)
 {
-
+    this->camera->processZoom(deltaY);
 }
 
 void Application::mouseCallback(GLFWwindow* window, int button, int action, int mods)
@@ -112,8 +152,25 @@ void Application::mouseCallback(GLFWwindow* window, int button, int action, int 
     }
 }
 
-void Application::cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
+void Application::cursorPosCallback(GLFWwindow* window, double xposIn, double yposIn)
 {
+    float xpos = static_cast<float>(xposIn);
+    float ypos = static_cast<float>(yposIn);
+
+    if (this->firstMouse)
+    {
+        this->lastX = width / 2.0f;
+        this->lastY = height / 2.0f;
+        this->firstMouse = false;
+    }
+
+    float xoffset = xpos - this->lastX;
+    float yoffset = this->lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    this->lastX = xpos;
+    this->lastY = ypos;
+
+    //this->camera->processLook(xoffset, yoffset, this->time->getDelta());
 }
 
 void Application::resizeCallback(GLFWwindow* window, int width, int height)

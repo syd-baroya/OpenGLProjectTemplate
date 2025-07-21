@@ -61,6 +61,38 @@ GLuint ShaderProgram::createShader(const std::string& path, GLenum shaderType) {
 	return shader;
 }
 
+void ShaderProgram::setBool(const char* name, bool value) {
+	glUniform1i(glGetUniformLocation(ID, name), (int)value);
+}
+
+void ShaderProgram::setInt(const char* name, int value) {
+	glUniform1i(glGetUniformLocation(ID, name), value);
+}
+
+void ShaderProgram::setFloat(const char* name, float value) {
+	glUniform1f(glGetUniformLocation(ID, name), value);
+}
+
+void ShaderProgram::setVec2(const char* name, float x, float y) {
+	glUniform2f(glGetUniformLocation(this->ID, name), x, y);
+}
+
+void ShaderProgram::setVec3(const char* name, const glm::vec2& value) {
+	glUniform2f(glGetUniformLocation(this->ID, name), value.x, value.y);
+}
+
+void ShaderProgram::setVec3(const char* name, float x, float y, float z) {
+	glUniform3f(glGetUniformLocation(this->ID, name), x, y, z);
+}
+
+void ShaderProgram::setVec3(const char* name, const glm::vec3& value) {
+	glUniform3f(glGetUniformLocation(this->ID, name), value.x, value.y, value.z);
+}
+
+void ShaderProgram::setMat4(const char* name, glm::mat4 value) {
+	glUniformMatrix4fv(glGetUniformLocation(this->ID, name), 1, GL_FALSE, glm::value_ptr(value));
+}
+
 // Activates the Shader Program
 void ShaderProgram::bind()
 {
@@ -111,14 +143,18 @@ std::string ShaderProgram::getShaderTypeAsString(GLenum shaderType) {
 	switch (shaderType) {
 		case GL_VERTEX_SHADER:
 			result = "VERTEX";
+			break;
 		case GL_FRAGMENT_SHADER:
 			result = "FRAGMENT";
+			break;
 		case GL_GEOMETRY_SHADER:
 			result = "GEOMETRY";
+			break;
 		/*case GL_COMPUTE_SHADER:
 			result = "COMPUTE";*/ // only works with OpenGL 4.3 and higher
 		default:
 			result = "";
+			break;
 	}
 	return result;
 }

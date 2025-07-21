@@ -21,23 +21,12 @@ Square::Square() {
     ebo->unbind();
 }
 
-void Square::update(float rotation, float aspect, GLuint shaderID) {
-    // Initializes matrices so they are not the null matrix
-    glm::mat4 model = glm::mat4(1.0f);
-    glm::mat4 view = glm::mat4(1.0f);
-    glm::mat4 proj = glm::mat4(1.0f);
+glm::mat4 Square::getModelMatrix() {
+    return glm::mat4(1.0f);
+}
 
-    // Assigns different transformations to each matrix
-    view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-    proj = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 100.0f);
+void Square::update(double delta) {
 
-    // Outputs the matrices into the Vertex Shader
-    int modelLoc = glGetUniformLocation(shaderID, "model");
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-    int viewLoc = glGetUniformLocation(shaderID, "view");
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-    int projLoc = glGetUniformLocation(shaderID, "proj");
-    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
 }
 
 void Square::render() {

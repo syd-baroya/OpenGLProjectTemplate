@@ -1,6 +1,9 @@
 #include "Pyramid.h"
 
 Pyramid::Pyramid() {
+
+    this->rotation = 0.0f;
+
     // Generates Vertex Array Object and binds it
     vao = new VAO();
     vao->bind();
@@ -21,25 +24,12 @@ Pyramid::Pyramid() {
     ebo->unbind();
 }
 
-void Pyramid::update(float rotation, float aspect, GLuint shaderID) {
+glm::mat4 Pyramid::getModelMatrix() {
+    return glm::rotate(glm::mat4(1.0f), glm::radians(this->rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+}
 
-    // Initializes matrices so they are not the null matrix
-    glm::mat4 model = glm::mat4(1.0f);
-    glm::mat4 view = glm::mat4(1.0f);
-    glm::mat4 proj = glm::mat4(1.0f);
-
-    // Assigns different transformations to each matrix
-    model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-    view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-    proj = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 100.0f);
-
-    // Outputs the matrices into the Vertex Shader
-    int modelLoc = glGetUniformLocation(shaderID, "model");
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-    int viewLoc = glGetUniformLocation(shaderID, "view");
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-    int projLoc = glGetUniformLocation(shaderID, "proj");
-    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+void Pyramid::update(double delta) {
+    this->rotation += delta*10.0;
 }
 
 void Pyramid::render() {

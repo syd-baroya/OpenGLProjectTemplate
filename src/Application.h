@@ -9,7 +9,21 @@ namespace fs = std::filesystem;
 #include "sceneObjs/Square.h"
 #include "sceneObjs/Pyramid.h"
 #include "helpers/Texture.h"
+#include "helpers/Camera.h"	
 #include <glm/glm.hpp>
+
+
+class Time {
+	public:
+		Time();
+		void update();
+		double getDelta();
+
+	private:
+		double prevTime;
+		double deltaTime;
+		double currTime;
+};
 
 class Application : public EventCallbacks
 {
@@ -35,11 +49,13 @@ class Application : public EventCallbacks
 		void resizeCallback(GLFWwindow* window, int in_width, int in_height);
 
 private:
+	Time* time;
+	Camera* camera;
+
 	SceneObject* square;
 	SceneObject* pyramid;
 
 	ShaderProgram* pyramidShader;
-	ShaderProgram* squareShader;
 
 	Texture* woodTexture;
 	Texture* happyFaceTexture;
@@ -47,10 +63,10 @@ private:
 	std::string texturesDir = "../resources/images/";
 	std::string shadersDir = "../resources/shaders/";
 
-	GLuint uniID;
 	unsigned int width, height;
-	float rotation;
-	double prevTime;
+	bool firstMouse = true;
+	float lastX;
+	float lastY;
 };
 
 #endif

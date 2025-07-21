@@ -14,7 +14,8 @@ class SceneObject {
 public:
 	SceneObject() {}
 
-	virtual void update(float rotation, float aspect, GLuint shaderID) = 0;
+	virtual glm::mat4 getModelMatrix() = 0;
+	virtual void update(double delta) = 0;
 	virtual void render() = 0;
 	virtual void destroy() = 0;
 

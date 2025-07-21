@@ -15,13 +15,16 @@ class Pyramid : public SceneObject {
 public:
     Pyramid();
 
-    void update(float rotation, float aspect, GLuint shaderID);
+    glm::mat4 getModelMatrix();
+
+    void update(double delta);
 
     void render();
 
     void destroy();
 
 private:
+    float rotation;
     VAO* vao;
     VBO* vbo;
     EBO* ebo;
