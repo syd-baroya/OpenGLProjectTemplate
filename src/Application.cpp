@@ -94,37 +94,6 @@ void Application::destroy() {
 void Application::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     // used keys: escape z
-    if (key == GLFW_KEY_W && action == GLFW_PRESS) {
-        this->camera->processMovement(FORWARD, this->time->getDelta());
-    }
-    if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-        this->camera->processMovement(BACKWARD, this->time->getDelta());
-    }
-    if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-        this->camera->processMovement(LEFT, this->time->getDelta());
-    }
-    if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-        this->camera->processMovement(RIGHT, this->time->getDelta());
-    }
-    if (key == GLFW_KEY_E && action == GLFW_PRESS) {
-        this->camera->processMovement(UP, this->time->getDelta());
-    }
-    if (key == GLFW_KEY_C && action == GLFW_PRESS) {
-        this->camera->processMovement(DOWN, this->time->getDelta());
-    }
-    if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
-        this->camera->processLook(LOOK_UP, this->time->getDelta());
-    }
-    if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
-        this->camera->processLook(LOOK_DOWN, this->time->getDelta());
-    }
-    if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
-        this->camera->processLook(LOOK_LEFT, this->time->getDelta());
-    }
-    if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
-        this->camera->processLook(LOOK_RIGHT, this->time->getDelta());
-    }
-
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
@@ -134,7 +103,50 @@ void Application::keyCallback(GLFWwindow* window, int key, int scancode, int act
     if (key == GLFW_KEY_Z && action == GLFW_RELEASE) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
-    
+
+    if (key == GLFW_KEY_W && (action == GLFW_PRESS || this->holdingDownKey)) {
+        this->camera->processMovement(FORWARD, this->time->getDelta());
+        this->holdingDownKey = true;
+    }
+    if (key == GLFW_KEY_S && (action == GLFW_PRESS || this->holdingDownKey)) {
+        this->camera->processMovement(BACKWARD, this->time->getDelta());
+        this->holdingDownKey = true;
+    }
+    if (key == GLFW_KEY_A && (action == GLFW_PRESS || this->holdingDownKey)) {
+        this->camera->processMovement(LEFT, this->time->getDelta());
+        this->holdingDownKey = true;
+    }
+    if (key == GLFW_KEY_D && (action == GLFW_PRESS || this->holdingDownKey)) {
+        this->camera->processMovement(RIGHT, this->time->getDelta());
+        this->holdingDownKey = true;
+    }
+    if (key == GLFW_KEY_E && (action == GLFW_PRESS || this->holdingDownKey)) {
+        this->camera->processMovement(UP, this->time->getDelta());
+        this->holdingDownKey = true;
+    }
+    if (key == GLFW_KEY_C && (action == GLFW_PRESS || this->holdingDownKey)) {
+        this->camera->processMovement(DOWN, this->time->getDelta());
+        this->holdingDownKey = true;
+    }
+    if (key == GLFW_KEY_UP && (action == GLFW_PRESS || this->holdingDownKey)) {
+        this->camera->processLook(LOOK_UP, this->time->getDelta());
+        this->holdingDownKey = true;
+    }
+    if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || this->holdingDownKey)) {
+        this->camera->processLook(LOOK_DOWN, this->time->getDelta());
+        this->holdingDownKey = true;
+    }
+    if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || this->holdingDownKey)) {
+        this->camera->processLook(LOOK_LEFT, this->time->getDelta());
+        this->holdingDownKey = true;
+    }
+    if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || this->holdingDownKey)) {
+        this->camera->processLook(LOOK_RIGHT, this->time->getDelta());
+        this->holdingDownKey = true;
+    }
+    if (action == GLFW_RELEASE) {
+        this->holdingDownKey = false;
+    }
 }
 
 void Application::scrollCallback(GLFWwindow* window, double deltaX, double deltaY)

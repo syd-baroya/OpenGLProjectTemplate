@@ -67,6 +67,7 @@ private:
 	bool firstMouse = true;
 	float lastX;
 	float lastY;
+	float holdingDownKey = false;
 };
 
 #endif
