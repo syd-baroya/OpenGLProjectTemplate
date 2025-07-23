@@ -36,12 +36,12 @@ void Application::initTextures() {
     this->woodTexture = new Texture((texturesDir + "woodContainer.jpg").c_str(), "diffuse", 0);
     this->happyFaceTexture = new Texture((texturesDir + "awesomeface.png").c_str(), "diffuse", 1);
 
-    this->woodTexture->assign(pyramidShader, "tex0");
-    this->happyFaceTexture->assign(pyramidShader, "tex1");
+    this->woodTexture->assign(defaultShader, "tex0");
+    this->happyFaceTexture->assign(defaultShader, "tex1");
 }
 
 void Application::initShaders() {
-    this->pyramidShader = new ShaderProgram(shadersDir + "default.vert", shadersDir + "default.frag");
+    this->defaultShader = new ShaderProgram(shadersDir + "default.vert", shadersDir + "default.frag");
 }
 
 void Application::initObjects() {
@@ -57,7 +57,7 @@ void Application::update() {
 }
 
 void Application::render() {
-    this->pyramidShader->bind();
+    this->defaultShader->bind();
 
     this->woodTexture->bind();
     this->happyFaceTexture->bind();
@@ -66,21 +66,21 @@ void Application::render() {
     const glm::mat4 viewMat = this->camera->getViewMatrix();
     glm::mat4 modelMat;
 
-    this->pyramidShader->setMat4("view", viewMat);
-    this->pyramidShader->setMat4("proj", projMat);
+    this->defaultShader->setMat4("view", viewMat);
+    this->defaultShader->setMat4("proj", projMat);
 
     modelMat = this->square->getModelMatrix();
-    this->pyramidShader->setMat4("model", modelMat);
+    this->defaultShader->setMat4("model", modelMat);
     this->square->render();
 
     modelMat = this->pyramid->getModelMatrix();
-    this->pyramidShader->setMat4("model", modelMat);
+    this->defaultShader->setMat4("model", modelMat);
     this->pyramid->render();
 
     this->woodTexture->unbind();
     this->happyFaceTexture->unbind();
 
-    this->pyramidShader->unbind();
+    this->defaultShader->unbind();
 }
 
 void Application::destroy() {
@@ -88,7 +88,7 @@ void Application::destroy() {
     this->pyramid->destroy();
     this->woodTexture->destroy();
     this->happyFaceTexture->destroy();
-    this->pyramidShader->destroy();
+    this->defaultShader->destroy();
 }
 
 void Application::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -128,22 +128,6 @@ void Application::keyCallback(GLFWwindow* window, int key, int scancode, int act
         this->camera->processMovement(DOWN, this->time->getDelta());
         this->holdingDownKey = true;
     }
-    if (key == GLFW_KEY_UP && (action == GLFW_PRESS || this->holdingDownKey)) {
-        this->camera->processLook(LOOK_UP, this->time->getDelta());
-        this->holdingDownKey = true;
-    }
-    if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || this->holdingDownKey)) {
-        this->camera->processLook(LOOK_DOWN, this->time->getDelta());
-        this->holdingDownKey = true;
-    }
-    if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || this->holdingDownKey)) {
-        this->camera->processLook(LOOK_LEFT, this->time->getDelta());
-        this->holdingDownKey = true;
-    }
-    if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || this->holdingDownKey)) {
-        this->camera->processLook(LOOK_RIGHT, this->time->getDelta());
-        this->holdingDownKey = true;
-    }
     if (action == GLFW_RELEASE) {
         this->holdingDownKey = false;
     }
@@ -156,33 +140,34 @@ void Application::scrollCallback(GLFWwindow* window, double deltaX, double delta
 
 void Application::mouseCallback(GLFWwindow* window, int button, int action, int mods)
 {
-    double posX, posY;
-
     if (action == GLFW_PRESS)
     {
-        glfwGetCursorPos(window, &posX, &posY);
+        // Hides mouse cursor
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
+        // Prevents camera from jumping on the first click
+        if (this->mouseClicked)
+        {
+            glfwSetCursorPos(window, (this->width / 2.f), (this->height / 2.f));
+            this->mouseClicked = false;
+        }
+
+    } else if (action == GLFW_RELEASE)
+    {
+        this->mouseClicked = true;
+        // Unhides cursor since camera is not looking around anymore
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
+
 }
 
 void Application::cursorPosCallback(GLFWwindow* window, double xposIn, double yposIn)
 {
-    float xpos = static_cast<float>(xposIn);
-    float ypos = static_cast<float>(yposIn);
-
-    if (this->firstMouse)
+    if (!this->mouseClicked)
     {
-        this->lastX = width / 2.0f;
-        this->lastY = height / 2.0f;
-        this->firstMouse = false;
+        this->camera->processLook(xposIn, yposIn, this->time->getDelta());
+        glfwSetCursorPos(window, (this->width / 2.f), (this->height / 2.f));
     }
-
-    float xoffset = xpos - this->lastX;
-    float yoffset = this->lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    this->lastX = xpos;
-    this->lastY = ypos;
-
-    //this->camera->processLook(xoffset, yoffset, this->time->getDelta());
 }
 
 void Application::resizeCallback(GLFWwindow* window, int width, int height)

@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-Camera::Camera(int width, int height, Projection proj) : yaw(YAW), pitch(PITCH), zoom(ZOOM) {
+Camera::Camera(int width, int height, Projection proj) : zoom(ZOOM) {
 	this->position = glm::vec3(0.0f, 0.0f, 3.0f);
 	this->forward = glm::vec3(0.0f, 0.0f, -1.0f);
 	this->up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -9,10 +9,9 @@ Camera::Camera(int width, int height, Projection proj) : yaw(YAW), pitch(PITCH),
 	this->screen_height = height;
 
 	this->projType = proj;
-	this->updateCameraVectors();
 }
 
-Camera::Camera(glm::vec3 position, glm::vec3 forward, glm::vec3 up, int width, int height, Projection proj) : yaw(YAW), pitch(PITCH), zoom(ZOOM) {
+Camera::Camera(glm::vec3 position, glm::vec3 forward, glm::vec3 up, int width, int height, Projection proj) : zoom(ZOOM) {
 	this->position = position;
 	this->forward = forward;
 	this->up = up;
@@ -21,7 +20,6 @@ Camera::Camera(glm::vec3 position, glm::vec3 forward, glm::vec3 up, int width, i
 	this->screen_height = height;
 
 	this->projType = proj;
-	this->updateCameraVectors();
 }
 
 glm::mat4 Camera::getViewMatrix() {
@@ -64,40 +62,24 @@ void Camera::processMovement(CameraMovement direction, float deltaTime) {
 	}
 }
 
-void Camera::processLook(CameraMovement direction, float deltaTime) {
-	float velocity = this->look_speed * deltaTime;
-	switch (direction) {
-		case LOOK_UP:
-			this->lookUp(velocity);
-			break;
-		case LOOK_DOWN:
-			this->lookDown(velocity);
-			break;
-		case LOOK_LEFT:
-			this->lookLeft(velocity);
-			break;
-		case LOOK_RIGHT:
-			this->lookRight(velocity);
-			break;
-		default:
-			break;
+void Camera::processLook(double mouseX, double mouseY, double deltaTime) {
+	// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
+// and then "transforms" them into degrees 
+	float rotX = this->mouse_sensitivity * (float)(mouseY - (this->screen_height / 2)) / this->screen_height * deltaTime;
+	float rotY = this->mouse_sensitivity * (float)(mouseX - (this->screen_width / 2)) / this->screen_width * deltaTime;
+
+	// Calculates upcoming vertical change in the Orientation
+	glm::vec3 newOrientation = glm::rotate(this->forward, glm::radians(-rotX), glm::normalize(glm::cross(this->forward, this->up)));
+
+	// Decides whether or not the next vertical Orientation is legal or not
+	if (abs(glm::angle(newOrientation, this->up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+	{
+		this->forward = newOrientation;
 	}
-	this->updateCameraVectors();
-}
 
-void Camera::processLook(float xoffset, float yoffset, float deltaTime) {
-	xoffset *= this->mouse_sensitivity;
-	yoffset *= this->mouse_sensitivity;
+	// Rotates the Orientation left and right
+	this->forward = glm::rotate(this->forward, glm::radians(-rotY), this->up);
 
-	this->yaw += xoffset;
-	this->pitch += yoffset;
-
-	if (this->pitch > 89.0f)
-		this->pitch = 89.0f;
-	if (this->pitch < -89.0f)
-		this->pitch = -89.0f;
-	// update Front, Right and Up Vectors using the updated Euler angles
-	this->updateCameraVectors();
 }
 
 
@@ -107,23 +89,6 @@ void Camera::processZoom(float yOffset) {
 		this->zoom = 1.0f;
 	if (this->zoom > 45.0f)
 		this->zoom = 45.0f;
-}
-
-void Camera::lookUp(float velocity) {
-	this->pitch += velocity;
-	if (this->pitch > 89.0f)
-		this->pitch = 89.0f;
-}
-void Camera::lookDown(float velocity) {
-	this->pitch -= velocity;
-	if (this->pitch < -89.0f)
-		this->pitch = -89.0f;
-}
-void Camera::lookLeft(float velocity) {
-	this->yaw -= velocity;
-}
-void Camera::lookRight(float velocity) {
-	this->yaw += velocity;
 }
 
 void Camera::moveLeft(float velocity) {
@@ -143,16 +108,4 @@ void Camera::moveUp(float velocity) {
 }
 void Camera::moveDown(float velocity) {
 	this->position -= velocity * this->up;
-}
-
-void Camera::updateCameraVectors() {
-	// calculate the new forward vector
-	glm::vec3 forward;
-	forward.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
-	forward.y = sin(glm::radians(this->pitch));
-	forward.z = sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
-	this->forward = glm::normalize(forward);
-	// also re-calculate the Right and Up vector
-	this->right = glm::normalize(glm::cross(this->forward, WORLD_UP));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-	this->up = glm::normalize(glm::cross(this->right, this->forward));
 }

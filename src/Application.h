@@ -55,7 +55,7 @@ private:
 	SceneObject* square;
 	SceneObject* pyramid;
 
-	ShaderProgram* pyramidShader;
+	ShaderProgram* defaultShader;
 
 	Texture* woodTexture;
 	Texture* happyFaceTexture;
@@ -64,7 +64,8 @@ private:
 	std::string shadersDir = "../resources/shaders/";
 
 	unsigned int width, height;
-	bool firstMouse = true;
+	bool mouseClicked = true;
+	bool mouseMoving = false;
 	float lastX;
 	float lastY;
 	float holdingDownKey = false;
