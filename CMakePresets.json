@@ -1,0 +1,47 @@
+{
+  "version": 4,
+  "configurePresets": [
+    {
+      "name": "windows-vcpkg",
+      "displayName": "Windows with Vcpkg",
+      "description": "Configures the project for Windows with the vcpkg toolchain.",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "C:/Libraries/vcpkg/scripts/buildsystems/vcpkg.cmake"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "macos-vcpkg",
+      "displayName": "macOS with Vcpkg",
+      "description": "Configures the project for macOS with the vcpkg toolchain.",
+      "generator": "Xcode",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "/path/to/your/vcpkg/scripts/buildsystems/vcpkg.cmake"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "windows-vcpkg",
+      "displayName": "Windows with Vcpkg",
+      "configurePreset": "windows-vcpkg"
+    },
+    {
+      "name": "macos-vcpkg",
+      "displayName": "macOS with Vcpkg",
+      "configurePreset": "macos-vcpkg"
+    }
+  ]
+}

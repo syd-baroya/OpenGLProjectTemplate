@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.15)
-include("${CMAKE_SOURCE_DIR}/FindGfxLibs.cmake")
 project(OpenGLProjectTemplate)
 
 # Set the default startup project in Visual Studio
@@ -8,34 +7,54 @@ set(CMAKE_VS_STARTUP_PROJECT ${CMAKE_PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Include directories
-include_directories(
-    "dep/include"
-    "src"
-)
+# vcpkg will handle finding our packages
+find_package(assimp CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+find_package(glad CONFIG REQUIRED)
+
+
+
 
 # Source files
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/helpers/*.cpp" "src/sceneObjects/*.cpp")
 
 # We don't really need to include header and resource files to build, but it's
 # nice to have them show up in IDEs.
-file(GLOB_RECURSE HEADERS "src/*.h" "src/helpers/*.h" "src/sceneObjects/*.h" "src/*/*.h")
+file(GLOB_RECURSE HEADERS "src/*.h" "src/helpers/*.h" "src/sceneObjects/*.h")
 file(GLOB_RECURSE GLSL_SOURCE_FILES "resources/shaders/*.glsl" "resources/shaders/*.vert" "resources/shaders/*.frag")
 
 # Set the executable.
-add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS} ${GLSL_SOURCE_FILES} dep/glad.c dep/stb_image.cpp)
+add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS} ${GLSL_SOURCE_FILES}
+    CMakeLists.txt
+    CMakePresets.json
+    README.md
+    vcpkg.json
+)
 
-set_source_files_properties(dep/stb_image.cpp PROPERTIES LANGUAGE CXX)
+include_directories(src)
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ext)
+add_compile_definitions(GLM_ENABLE_EXPERIMENTAL)
 
 # Group GLSL files under a "Resource Files" filter in Visual Studio
 source_group("Resource Files" FILES ${GLSL_SOURCE_FILES})
 
-# Group these dependency files into a "Library Files" filter in IDEs
-source_group("Library Source Files" FILES "${CMAKE_SOURCE_DIR}/dep/glad.c" "${CMAKE_SOURCE_DIR}/dep/stb_image.cpp")
+# Group build files under 'BuildInfo Files' filter in Visual Studio
+source_group("BuildInfo Files" FILES
+    CMakeLists.txt
+    CMakePresets.json
+    README.md
+    vcpkg.json
+)
 
-# Helper function included from FindGfxLibs.cmake
-findGLFW3(${CMAKE_PROJECT_NAME})
-findGLM(${CMAKE_PROJECT_NAME})
+# Link libraries found by vcpkg
+target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC
+    assimp::assimp
+    glm::glm
+    glfw
+    glad::glad
+    
+)
 
 # OS specific options and libraries
 if(WIN32)
@@ -52,7 +71,7 @@ else()
         target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${COCOA_FRAMEWORK} ${IOKIT_FRAMEWORK} ${COREVIDEO_FRAMEWORK} ${OPENGL_FRAMEWORK})
     else()
         # Assumes linux
-                target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC GL dl)
+        target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC GL dl)
     endif()
 endif()
 
