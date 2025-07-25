@@ -28,17 +28,14 @@ void Application::init(unsigned int width, unsigned int height) {
     this->width = width;
     this->height = height;
 
-    initShaders();
     initTextures();
+    initShaders();
     initObjects();
 }
 
 void Application::initTextures() {
     this->woodTexture = new Texture((texturesDir + "woodContainer.jpg").c_str(), "diffuse", 0);
     this->happyFaceTexture = new Texture((texturesDir + "awesomeface.png").c_str(), "diffuse", 1);
-
-    this->woodTexture->assign(defaultShader, "tex0");
-    this->happyFaceTexture->assign(defaultShader, "tex1");
 }
 
 void Application::initShaders() {
@@ -52,6 +49,8 @@ void Application::initShaders() {
     this->lightShader->unbind();
 
     this->defaultShader->bind();
+    this->defaultShader->setInt("tex0", this->woodTexture->unit);
+    this->defaultShader->setInt("tex1", this->happyFaceTexture->unit);
     this->defaultShader->setVec4("lightColor", this->lightColor);
     this->defaultShader->setVec3("lightPos", this->lightPos);
     this->defaultShader->unbind();
@@ -66,6 +65,7 @@ void Application::initObjects() {
     this->lightCube->setPosition(this->lightPos);
     this->pyramid->setPosition(glm::vec3(0, 0, 0));
 }
+
 void Application::update() {
     this->time->update();
 
