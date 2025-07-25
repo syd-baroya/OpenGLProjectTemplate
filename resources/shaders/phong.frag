@@ -24,7 +24,7 @@ uniform vec3 lightPos;
 // Gets the position of the camera from the main function
 uniform vec3 camPos;
 
-vec4 pointLight()
+vec4 pointLight(vec4 color)
 {	
 	// used in two variables so I calculate it here to not have to do it twice
 	vec3 lightVec = lightPos - crntPos;
@@ -50,12 +50,12 @@ vec4 pointLight()
 	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
 	float specular = specAmount * specularLight;
 
-	return (texture(tex0, texCoord) * (diffuse * inten + ambient + specular * inten)) * lightColor;
+	return (color * (diffuse * inten + ambient + specular * inten)) * lightColor;
 
 	//return (texture(tex0, texCoord) * (diffuse * inten + ambient) + texture(tex1, texCoord).r * specular * inten) * lightColor;
 }
 
-vec4 direcLight()
+vec4 direcLight(vec4 color)
 {
 	// ambient lighting
 	float ambient = 0.20f;
@@ -72,12 +72,12 @@ vec4 direcLight()
 	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
 	float specular = specAmount * specularLight;
 
-	return (texture(tex0, texCoord) * (diffuse + ambient + specular)) * lightColor;
+	return (color * (diffuse + ambient + specular)) * lightColor;
 
 	//return (texture(tex0, texCoord) * (diffuse + ambient) + texture(tex1, texCoord).r * specular) * lightColor;
 }
 
-vec4 spotLight()
+vec4 spotLight(vec4 color)
 {
 	// controls how big the area that is lit up is
 	float outerCone = 0.90f;
@@ -102,7 +102,7 @@ vec4 spotLight()
 	float angle = dot(vec3(0.0f, -1.0f, 0.0f), -lightDirection);
 	float inten = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
 	
-	return (texture(tex0, texCoord) * (diffuse * inten + ambient +  specular * inten)) * lightColor;
+	return (color * (diffuse * inten + ambient +  specular * inten)) * lightColor;
 
 	//return (texture(tex0, texCoord) * (diffuse * inten + ambient) + texture(tex1, texCoord).r * specular * inten) * lightColor;
 }
@@ -110,6 +110,7 @@ vec4 spotLight()
 
 void main()
 {
+	vec4 mColor = texture(tex0, texCoord); //vec4(color, 1.0); 
 	// outputs final color
-	frag_color = (direcLight()*.5) + (pointLight()*1) + (spotLight()*2);
+	frag_color = (direcLight(mColor)*.5) + (pointLight(mColor)*1) + (spotLight(mColor)*2);
 }

@@ -1,6 +1,3 @@
-#pragma once
-#pragma once
-
 #ifndef PYRAMID_H
 #define PYRAMID_H
 

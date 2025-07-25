@@ -64,6 +64,7 @@ void Application::initObjects() {
     this->lightCube = new Cube();
 
     this->lightCube->setPosition(this->lightPos);
+    this->pyramid->setPosition(glm::vec3(0, 0, 0));
 }
 void Application::update() {
     this->time->update();
@@ -76,8 +77,8 @@ void Application::update() {
 void Application::render() {
     this->defaultShader->bind();
 
-    this->woodTexture->bind();
-    this->happyFaceTexture->bind();
+     this->woodTexture->bind();
+     this->happyFaceTexture->bind();
 
     const glm::mat4 projMat = this->camera->getProjectionMatrix();
     const glm::mat4 viewMat = this->camera->getViewMatrix();
