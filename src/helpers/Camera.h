@@ -46,6 +46,7 @@ class Camera {
 
 		glm::mat4 getViewMatrix();
 		glm::mat4 getProjectionMatrix();
+		glm::vec3 getPosition();
 
 	private:
 		glm::vec3 position;
@@ -58,7 +59,7 @@ class Camera {
 		float zoom;
 		float move_speed = 2.0f;
 		float look_speed = 20.0f;
-		float mouse_sensitivity = 2000.f;
+		float mouse_sensitivity = 3000.f;
 };
 
 #endif

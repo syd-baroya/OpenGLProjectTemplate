@@ -8,6 +8,7 @@ namespace fs = std::filesystem;
 #include "WindowManager.h"
 #include "sceneObjs/Square.h"
 #include "sceneObjs/Pyramid.h"
+#include "sceneObjs/Cube.h"
 #include "helpers/Texture.h"
 #include "helpers/Camera.h"	
 #include <glm/glm.hpp>
@@ -52,10 +53,15 @@ private:
 	Time* time;
 	Camera* camera;
 
+	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
+
 	SceneObject* square;
 	SceneObject* pyramid;
+	SceneObject* lightCube;
 
 	ShaderProgram* defaultShader;
+	ShaderProgram* lightShader;
 
 	Texture* woodTexture;
 	Texture* happyFaceTexture;

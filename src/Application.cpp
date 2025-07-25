@@ -23,7 +23,8 @@ double Time::getDelta() {
 
 void Application::init(unsigned int width, unsigned int height) {
     this->time = new Time();
-    this->camera = new Camera(width, height, PERSPECTIVE);
+    this->camera = new Camera(glm::vec3(0.0f, 1.5f, 3.0f), glm::vec3(0.0f, -0.5f, -1.f), glm::vec3(0.0f, 1.0f, 0.0f), width, height, PERSPECTIVE);
+
     this->width = width;
     this->height = height;
 
@@ -41,12 +42,28 @@ void Application::initTextures() {
 }
 
 void Application::initShaders() {
-    this->defaultShader = new ShaderProgram(shadersDir + "default.vert", shadersDir + "default.frag");
+    //this->defaultShader = new ShaderProgram(this->shadersDir + "default.vert", this->shadersDir + "default.frag");
+    this->defaultShader = new ShaderProgram(this->shadersDir + "phong.vert", this->shadersDir + "phong.frag");
+
+    this->lightShader = new ShaderProgram(this->shadersDir + "light.vert", this->shadersDir + "light.frag");
+
+    this->lightShader->bind();
+    this->lightShader->setVec4("lightColor", this->lightColor);
+    this->lightShader->unbind();
+
+    this->defaultShader->bind();
+    this->defaultShader->setVec4("lightColor", this->lightColor);
+    this->defaultShader->setVec3("lightPos", this->lightPos);
+    this->defaultShader->unbind();
+
 }
 
 void Application::initObjects() {
     this->square = new Square();
     this->pyramid = new Pyramid();
+    this->lightCube = new Cube();
+
+    this->lightCube->setPosition(this->lightPos);
 }
 void Application::update() {
     this->time->update();
@@ -68,6 +85,7 @@ void Application::render() {
 
     this->defaultShader->setMat4("view", viewMat);
     this->defaultShader->setMat4("proj", projMat);
+    this->defaultShader->setVec3("camPos", this->camera->getPosition());
 
     modelMat = this->square->getModelMatrix();
     this->defaultShader->setMat4("model", modelMat);
@@ -81,6 +99,17 @@ void Application::render() {
     this->happyFaceTexture->unbind();
 
     this->defaultShader->unbind();
+
+    this->lightShader->bind();
+
+    this->lightShader->setMat4("view", viewMat);
+    this->lightShader->setMat4("proj", projMat);
+
+    modelMat = this->lightCube->getModelMatrix();
+    this->lightShader->setMat4("model", modelMat);
+    this->lightCube->render();
+
+    this->lightShader->unbind();
 }
 
 void Application::destroy() {
@@ -89,6 +118,7 @@ void Application::destroy() {
     this->woodTexture->destroy();
     this->happyFaceTexture->destroy();
     this->defaultShader->destroy();
+    this->lightShader->destroy();
 }
 
 void Application::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)

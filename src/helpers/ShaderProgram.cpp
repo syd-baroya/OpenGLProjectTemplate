@@ -77,7 +77,7 @@ void ShaderProgram::setVec2(const char* name, float x, float y) {
 	glUniform2f(glGetUniformLocation(this->ID, name), x, y);
 }
 
-void ShaderProgram::setVec3(const char* name, const glm::vec2& value) {
+void ShaderProgram::setVec2(const char* name, const glm::vec2& value) {
 	glUniform2f(glGetUniformLocation(this->ID, name), value.x, value.y);
 }
 
@@ -87,6 +87,13 @@ void ShaderProgram::setVec3(const char* name, float x, float y, float z) {
 
 void ShaderProgram::setVec3(const char* name, const glm::vec3& value) {
 	glUniform3f(glGetUniformLocation(this->ID, name), value.x, value.y, value.z);
+}
+
+void ShaderProgram::setVec4(const char* name, float x, float y, float z, float w) {
+	glUniform4f(glGetUniformLocation(this->ID, name), x, y, z, w);
+}
+void ShaderProgram::setVec4(const char* name, const glm::vec4& value) {
+	glUniform4f(glGetUniformLocation(this->ID, name), value.x, value.y, value.z, value.w);
 }
 
 void ShaderProgram::setMat4(const char* name, glm::mat4 value) {

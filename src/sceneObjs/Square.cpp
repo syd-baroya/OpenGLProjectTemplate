@@ -11,9 +11,10 @@ Square::Square() {
     ebo = new EBO(indices, sizeof(indices));
 
     // Links VBO attributes such as coordinates and colors to VAO
-    vao->linkAttrib(*vbo, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
-    vao->linkAttrib(*vbo, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    vao->linkAttrib(*vbo, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    vao->linkAttrib(*vbo, 0, 3, GL_FLOAT, 11 * sizeof(float), (void*)0);
+    vao->linkAttrib(*vbo, 1, 3, GL_FLOAT, 11 * sizeof(float), (void*)(3 * sizeof(float)));
+    vao->linkAttrib(*vbo, 2, 2, GL_FLOAT, 11 * sizeof(float), (void*)(6 * sizeof(float)));
+    vao->linkAttrib(*vbo, 3, 3, GL_FLOAT, 11 * sizeof(float), (void*)(8 * sizeof(float)));
 
     // Unbind all to prevent accidentally modifying them
     vao->unbind();

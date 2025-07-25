@@ -15,6 +15,9 @@ public:
 	SceneObject() {}
 
 	virtual glm::mat4 getModelMatrix() = 0;
+	virtual void setPosition(glm::vec3 newPos){
+		this->position = newPos;
+	}
 	virtual void update(double delta) = 0;
 	virtual void render() = 0;
 	virtual void destroy() = 0;

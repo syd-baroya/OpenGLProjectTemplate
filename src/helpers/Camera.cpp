@@ -22,6 +22,10 @@ Camera::Camera(glm::vec3 position, glm::vec3 forward, glm::vec3 up, int width, i
 	this->projType = proj;
 }
 
+glm::vec3 Camera::getPosition() {
+	return this->position;
+}
+
 glm::mat4 Camera::getViewMatrix() {
 	return glm::lookAt(this->position, this->position + this->forward, this->up);
 }
@@ -64,7 +68,7 @@ void Camera::processMovement(CameraMovement direction, float deltaTime) {
 
 void Camera::processLook(double mouseX, double mouseY, double deltaTime) {
 	// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
-// and then "transforms" them into degrees 
+	// and then "transforms" them into degrees 
 	float rotX = this->mouse_sensitivity * (float)(mouseY - (this->screen_height / 2)) / this->screen_height * deltaTime;
 	float rotY = this->mouse_sensitivity * (float)(mouseX - (this->screen_width / 2)) / this->screen_width * deltaTime;
 
