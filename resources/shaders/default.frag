@@ -10,8 +10,8 @@ in vec3 color;
 in vec2 texCoord;
 
 // Gets the Texture Unit
-uniform sampler2D tex0;
-uniform sampler2D tex1;
+uniform sampler2D diffuse0;
+uniform sampler2D diffuse1;
 
 void main()
 {

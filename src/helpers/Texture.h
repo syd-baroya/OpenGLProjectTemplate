@@ -12,13 +12,11 @@ class Texture
 public:
 	GLuint ID;
 	const char* type;
+	const char* path;
 	GLuint unit;
 
 	Texture(const char* image, const char* texType, GLuint slot);
 
-
-	// Assigns a texture unit to a texture
-	void assign(ShaderProgram* shader, const char* uniform);
 	// Binds a texture
 	void bind();
 	// Unbinds a texture

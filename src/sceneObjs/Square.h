@@ -5,38 +5,33 @@
 
 #include "SceneObject.h"
 #include <GLFW/glfw3.h>
-#include "../helpers/VAO.h"
-#include "../helpers/VBO.h"
-#include "../helpers/EBO.h"
+#include "Mesh.h"
 
 class Square : public SceneObject {
 
 public:
     Square();
-
+    Square::Square(std::vector<Texture> textures);
     glm::mat4 getModelMatrix();
     void update(double delta);
 
-    void render();
+    void render(ShaderProgram& shader);
 
     void destroy();
 
 private:
-    VAO* vao;
-    VBO* vbo;
-    EBO* ebo;
-
+    Mesh* mesh;
     // Vertices coordinates
-    GLfloat vertices[sizeof(GLfloat)*24] =
-    { //     COORDINATES     /        COLORS        /    TexCoord    /       NORMALS     //
-        -1.0f, 0.0f,  1.0f,		1.0f, 0.0f, 0.0f,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
-        -1.0f, 0.0f, -1.0f,		0.0f, 1.0f, 0.0f,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-         1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 1.0f,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-         1.0f, 0.0f,  1.0f,		1.0f, 1.0f, 1.0f,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f
+    std::vector<Vertex>  vertices =
+    {   //     COORDINATES     /                  COLORS                  /           NORMALS         /    TexCoord     //
+        Vertex{glm::vec3(-1.0f, 0.0f,  1.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
+        Vertex{glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
+        Vertex{glm::vec3(1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f)},
+        Vertex{glm::vec3(1.0f, 0.0f,  1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f)}
     };
 
     // Indices for vertices order
-    GLuint indices[sizeof(GLuint)*6] =
+    std::vector<GLuint> indices =
     {
         0, 1, 2,
         0, 2, 3

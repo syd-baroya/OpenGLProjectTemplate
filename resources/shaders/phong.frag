@@ -15,8 +15,8 @@ in vec3 Normal;
 in vec3 crntPos;
 
 // Gets the Texture Unit from the main function
-uniform sampler2D tex0;
-uniform sampler2D tex1;
+uniform sampler2D diffuse0;
+uniform sampler2D diffuse1;
 // Gets the color of the light from the main function
 uniform vec4 lightColor;
 // Gets the position of the light from the main function
@@ -110,7 +110,7 @@ vec4 spotLight(vec4 color)
 
 void main()
 {
-	vec4 mColor = texture(tex0, texCoord); //vec4(color, 1.0); 
+	vec4 mColor = texture(diffuse0, texCoord); //vec4(color, 1.0); 
 	// outputs final color
 	frag_color = (direcLight(mColor)*.5) + (pointLight(mColor)*1) + (spotLight(mColor)*2);
 }

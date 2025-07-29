@@ -4,7 +4,7 @@
 
 #include<filesystem>
 namespace fs = std::filesystem;
-
+#include <iostream>
 #include "WindowManager.h"
 #include "sceneObjs/Square.h"
 #include "sceneObjs/Pyramid.h"
@@ -12,6 +12,7 @@ namespace fs = std::filesystem;
 #include "helpers/Texture.h"
 #include "helpers/Camera.h"	
 #include <glm/glm.hpp>
+#include "sceneObjs/Model.h"
 
 
 class Time {
@@ -60,14 +61,17 @@ private:
 	SceneObject* pyramid;
 	SceneObject* lightCube;
 
+	Model* backpack;
+
 	ShaderProgram* defaultShader;
 	ShaderProgram* lightShader;
+	ShaderProgram* backpackShader;
 
-	Texture* woodTexture;
-	Texture* happyFaceTexture;
+	std::vector<Texture> textures;
 
 	std::string texturesDir = "../resources/images/";
 	std::string shadersDir = "../resources/shaders/";
+	std::string modelsDir = "../resources/models/";
 
 	unsigned int width, height;
 	bool mouseClicked = true;

@@ -4,10 +4,9 @@
 #define CUBE_H
 
 #include "SceneObject.h"
+#include "Mesh.h"
 #include <GLFW/glfw3.h>
-#include "../helpers/VAO.h"
-#include "../helpers/VBO.h"
-#include "../helpers/EBO.h"
+
 
 class Cube : public SceneObject {
 
@@ -18,30 +17,27 @@ public:
 
     void update(double delta);
 
-    void render();
+    void render(ShaderProgram& shader);
 
     void destroy();
 
 private:
-    VAO* vao;
-    VBO* vbo;
-    EBO* ebo;
-
+    Mesh* mesh;
     // Vertices coordinates
-    GLfloat vertices[sizeof(GLfloat) * 24] =
+    std::vector<Vertex> vertices =
     { //     COORDINATES     //
-        -0.1f, -0.1f,  0.1f,
-        -0.1f, -0.1f, -0.1f,
-         0.1f, -0.1f, -0.1f,
-         0.1f, -0.1f,  0.1f,
-        -0.1f,  0.1f,  0.1f,
-        -0.1f,  0.1f, -0.1f,
-         0.1f,  0.1f, -0.1f,
-         0.1f,  0.1f,  0.1f
+        Vertex{glm::vec3(-0.1f, -0.1f,  0.1f)},
+        Vertex{glm::vec3(-0.1f, -0.1f, -0.1f)},
+        Vertex{glm::vec3(0.1f, -0.1f, -0.1f)},
+        Vertex{glm::vec3(0.1f, -0.1f,  0.1f)},
+        Vertex{glm::vec3(-0.1f,  0.1f,  0.1f)},
+        Vertex{glm::vec3(-0.1f,  0.1f, -0.1f)},
+        Vertex{glm::vec3(0.1f,  0.1f, -0.1f)},
+        Vertex{glm::vec3(0.1f,  0.1f,  0.1f)},
     };
 
     // Indices for vertices order
-    GLuint indices[sizeof(GLuint) * 36] =
+    std::vector<GLuint> indices =
     {
         0, 1, 2,
         0, 2, 3,

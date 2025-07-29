@@ -34,8 +34,8 @@ void Application::init(unsigned int width, unsigned int height) {
 }
 
 void Application::initTextures() {
-    this->woodTexture = new Texture((texturesDir + "woodContainer.jpg").c_str(), "diffuse", 0);
-    this->happyFaceTexture = new Texture((texturesDir + "awesomeface.png").c_str(), "diffuse", 1);
+    textures.push_back(Texture((texturesDir + "woodContainer_diffuse.jpg").c_str(), "diffuse", 0));
+    textures.push_back(Texture((texturesDir + "awesomeface_diffuse.png").c_str(), "diffuse", 1));
 }
 
 void Application::initShaders() {
@@ -44,26 +44,31 @@ void Application::initShaders() {
 
     this->lightShader = new ShaderProgram(this->shadersDir + "light.vert", this->shadersDir + "light.frag");
 
+    this->backpackShader = new ShaderProgram(this->shadersDir + "model.vert", this->shadersDir + "model.frag");
+
     this->lightShader->bind();
     this->lightShader->setVec4("lightColor", this->lightColor);
     this->lightShader->unbind();
 
     this->defaultShader->bind();
-    this->defaultShader->setInt("tex0", this->woodTexture->unit);
-    this->defaultShader->setInt("tex1", this->happyFaceTexture->unit);
     this->defaultShader->setVec4("lightColor", this->lightColor);
     this->defaultShader->setVec3("lightPos", this->lightPos);
     this->defaultShader->unbind();
 
+
 }
 
 void Application::initObjects() {
-    this->square = new Square();
-    this->pyramid = new Pyramid();
+
+    this->square = new Square(textures);
+    this->pyramid = new Pyramid(textures);
     this->lightCube = new Cube();
 
     this->lightCube->setPosition(this->lightPos);
     this->pyramid->setPosition(glm::vec3(0, 0, 0));
+
+    this->backpack = new Model((this->modelsDir + "sword/scene.gltf").c_str());
+    std::cout << "finished initializing objects" << std::endl;
 }
 
 void Application::update() {
@@ -75,14 +80,12 @@ void Application::update() {
 }
 
 void Application::render() {
-    this->defaultShader->bind();
-
-     this->woodTexture->bind();
-     this->happyFaceTexture->bind();
 
     const glm::mat4 projMat = this->camera->getProjectionMatrix();
     const glm::mat4 viewMat = this->camera->getViewMatrix();
     glm::mat4 modelMat;
+
+    this->defaultShader->bind();
 
     this->defaultShader->setMat4("view", viewMat);
     this->defaultShader->setMat4("proj", projMat);
@@ -90,14 +93,11 @@ void Application::render() {
 
     modelMat = this->square->getModelMatrix();
     this->defaultShader->setMat4("model", modelMat);
-    this->square->render();
+    this->square->render(*this->defaultShader);
 
     modelMat = this->pyramid->getModelMatrix();
     this->defaultShader->setMat4("model", modelMat);
-    this->pyramid->render();
-
-    this->woodTexture->unbind();
-    this->happyFaceTexture->unbind();
+    this->pyramid->render(*this->defaultShader);
 
     this->defaultShader->unbind();
 
@@ -108,16 +108,28 @@ void Application::render() {
 
     modelMat = this->lightCube->getModelMatrix();
     this->lightShader->setMat4("model", modelMat);
-    this->lightCube->render();
+    this->lightCube->render(*this->lightShader);
 
     this->lightShader->unbind();
+
+    this->backpackShader->bind();
+
+    this->backpackShader->setMat4("view", viewMat);
+    this->backpackShader->setMat4("proj", projMat);
+
+    modelMat = this->backpack->getModelMatrix();
+    this->backpackShader->setMat4("model", modelMat);
+    this->backpack->render(*this->backpackShader);
+
+    this->backpackShader->unbind();
 }
 
 void Application::destroy() {
     this->square->destroy();
     this->pyramid->destroy();
-    this->woodTexture->destroy();
-    this->happyFaceTexture->destroy();
+    for (Texture& tex : textures) {
+        tex.destroy();
+    }
     this->defaultShader->destroy();
     this->lightShader->destroy();
 }
