@@ -16,7 +16,7 @@ class Model {
 public:
 	Model(const char* path);
 	void render(ShaderProgram& shader);
-    glm::mat4 getModelMatrix();
+    void destroy();
 
 private:
     // model data

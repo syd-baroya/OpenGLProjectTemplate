@@ -65,9 +65,9 @@ void Application::initObjects() {
     this->lightCube = new Cube();
 
     this->lightCube->setPosition(this->lightPos);
-    this->pyramid->setPosition(glm::vec3(0, 0, 0));
 
-    this->backpack = new Model((this->modelsDir + "sword/scene.gltf").c_str());
+    this->backpack = new Otter((this->modelsDir + "otter/otter.dae").c_str());
+    this->backpack->setPosition(glm::vec3(0.25f, 0.0f, 0.5f));
     std::cout << "finished initializing objects" << std::endl;
 }
 
@@ -95,9 +95,13 @@ void Application::render() {
     this->defaultShader->setMat4("model", modelMat);
     this->square->render(*this->defaultShader);
 
-    modelMat = this->pyramid->getModelMatrix();
+    //modelMat = this->pyramid->getModelMatrix();
+    //this->defaultShader->setMat4("model", modelMat);
+    //this->pyramid->render(*this->defaultShader);
+
+    modelMat = this->backpack->getModelMatrix();
     this->defaultShader->setMat4("model", modelMat);
-    this->pyramid->render(*this->defaultShader);
+    this->backpack->render(*this->defaultShader);
 
     this->defaultShader->unbind();
 
@@ -112,16 +116,6 @@ void Application::render() {
 
     this->lightShader->unbind();
 
-    this->backpackShader->bind();
-
-    this->backpackShader->setMat4("view", viewMat);
-    this->backpackShader->setMat4("proj", projMat);
-
-    modelMat = this->backpack->getModelMatrix();
-    this->backpackShader->setMat4("model", modelMat);
-    this->backpack->render(*this->backpackShader);
-
-    this->backpackShader->unbind();
 }
 
 void Application::destroy() {

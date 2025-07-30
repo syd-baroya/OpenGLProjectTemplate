@@ -1,6 +1,6 @@
 #include "Pyramid.h"
 
-Pyramid::Pyramid() {
+Pyramid::Pyramid() : SceneObject() {
 
     this->rotation = 0.0f;
 

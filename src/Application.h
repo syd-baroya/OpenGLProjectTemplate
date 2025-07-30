@@ -12,7 +12,7 @@ namespace fs = std::filesystem;
 #include "helpers/Texture.h"
 #include "helpers/Camera.h"	
 #include <glm/glm.hpp>
-#include "sceneObjs/Model.h"
+#include "sceneObjs/Otter.h"
 
 
 class Time {
@@ -61,7 +61,7 @@ private:
 	SceneObject* pyramid;
 	SceneObject* lightCube;
 
-	Model* backpack;
+	SceneObject* backpack;
 
 	ShaderProgram* defaultShader;
 	ShaderProgram* lightShader;

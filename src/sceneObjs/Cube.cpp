@@ -1,6 +1,6 @@
 #include "Cube.h"
 
-Cube::Cube() {
+Cube::Cube() : SceneObject() {
     mesh = new Mesh(vertices, indices, std::vector<Texture>());
 }
 

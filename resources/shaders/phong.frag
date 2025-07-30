@@ -112,5 +112,5 @@ void main()
 {
 	vec4 mColor = texture(diffuse0, texCoord); //vec4(color, 1.0); 
 	// outputs final color
-	frag_color = (direcLight(mColor)*.5) + (pointLight(mColor)*1) + (spotLight(mColor)*2);
+	frag_color = (direcLight(mColor)*1) + (pointLight(mColor)*1) + (spotLight(mColor)*2);
 }

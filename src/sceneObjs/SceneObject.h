@@ -12,7 +12,11 @@
 class SceneObject {
 
 public:
-	SceneObject() {}
+	SceneObject() {
+		this->position = glm::vec3(0);
+		this->orientation = glm::vec3(0);
+		this->scale = glm::vec3(1);
+	}
 
 	virtual glm::mat4 getModelMatrix() = 0;
 	virtual void setPosition(glm::vec3 newPos){

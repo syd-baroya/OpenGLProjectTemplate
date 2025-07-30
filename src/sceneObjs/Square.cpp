@@ -1,6 +1,6 @@
 #include "Square.h"
 
-Square::Square() {
+Square::Square() : SceneObject() {
     mesh = new Mesh(vertices, indices, std::vector<Texture>());
 }
 
