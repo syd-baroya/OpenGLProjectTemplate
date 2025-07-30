@@ -8,7 +8,6 @@
 class Otter : public SceneObject {
 public:
     Otter(const char* path);
-    glm::mat4 getModelMatrix();
     void update(double delta);
 
     void render(ShaderProgram& shader);

@@ -11,8 +11,6 @@ public:
     Pyramid();
     Pyramid(std::vector<Texture> textures);
 
-    glm::mat4 getModelMatrix();
-
     void update(double delta);
 
     void render(ShaderProgram& shader);
@@ -20,7 +18,6 @@ public:
     void destroy();
 
 private:
-    float rotation;
     Mesh* mesh;
     // Vertices coordinates
     std::vector<Vertex> vertices =

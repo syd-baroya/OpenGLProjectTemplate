@@ -13,8 +13,6 @@ class Cube : public SceneObject {
 public:
     Cube();
 
-    glm::mat4 getModelMatrix();
-
     void update(double delta);
 
     void render(ShaderProgram& shader);

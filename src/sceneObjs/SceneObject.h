@@ -18,7 +18,18 @@ public:
 		this->scale = glm::vec3(1);
 	}
 
-	virtual glm::mat4 getModelMatrix() = 0;
+	virtual glm::mat4 getModelMatrix() {
+		return  glm::translate(
+					glm::rotate(
+						glm::rotate(
+							glm::rotate(
+								glm::scale(glm::mat4(1.0f), this->scale),
+							glm::radians(this->orientation.z), glm::vec3(0.0f, 0.0f, 1.0f)),
+						glm::radians(this->orientation.y), glm::vec3(0.0f, 1.0f, 0.0f)),
+					glm::radians(this->orientation.x), glm::vec3(1.0f, 0.0f, 0.0f)), 
+				this->position);
+			
+	};
 	virtual void setPosition(glm::vec3 newPos){
 		this->position = newPos;
 	}

@@ -8,10 +8,6 @@ Square::Square(std::vector<Texture> textures) {
     mesh = new Mesh(vertices, indices, textures);
 }
 
-glm::mat4 Square::getModelMatrix() {
-    return glm::mat4(1.0f);
-}
-
 void Square::update(double delta) {
 
 }

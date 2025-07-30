@@ -12,7 +12,7 @@ class Square : public SceneObject {
 public:
     Square();
     Square::Square(std::vector<Texture> textures);
-    glm::mat4 getModelMatrix();
+
     void update(double delta);
 
     void render(ShaderProgram& shader);
