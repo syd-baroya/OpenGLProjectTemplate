@@ -124,7 +124,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 
 // checks all material textures of a given type and loads the textures if they're not loaded yet.
    // the required info is returned as a Texture struct.
-std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, const char* typeName)
 {
     std::vector<Texture> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -145,7 +145,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
         if (!skip)
         {   
             std::string pathName = str.C_Str();
-            Texture texture = Texture((directory + '/' + pathName).c_str(), typeName.c_str(), textures_loaded.size());
+            Texture texture = Texture((directory + '/' + pathName).c_str(), typeName, textures_loaded.size());
             textures.push_back(texture);
             textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
         }

@@ -56,6 +56,12 @@ void Mesh::render(ShaderProgram& shader)
 
 	// Draw the actual mesh
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+
+	for (unsigned int j = 0; j < textures.size(); j++)
+	{
+		textures[j].unbind();
+	}
+	vao->unbind();
 }
 
 void Mesh::destroy() {

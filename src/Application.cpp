@@ -34,40 +34,39 @@ void Application::init(unsigned int width, unsigned int height) {
 }
 
 void Application::initTextures() {
-    textures.push_back(Texture((texturesDir + "woodContainer_diffuse.jpg").c_str(), "diffuse", 0));
-    textures.push_back(Texture((texturesDir + "awesomeface_diffuse.png").c_str(), "diffuse", 1));
+    textures.insert({ "woodContainer", Texture((texturesDir + "woodContainer_diffuse.jpg").c_str(), "diffuse", 0) });
+    textures.insert({ "awesomeFace", Texture((texturesDir + "awesomeface_diffuse.png").c_str(), "diffuse", 1) });
 }
 
 void Application::initShaders() {
-    //this->defaultShader = new ShaderProgram(this->shadersDir + "default.vert", this->shadersDir + "default.frag");
-    this->defaultShader = new ShaderProgram(this->shadersDir + "phong.vert", this->shadersDir + "phong.frag");
+    this->phongShader = new ShaderProgram(this->shadersDir + "phong.vert", this->shadersDir + "phong.frag");
 
     this->lightShader = new ShaderProgram(this->shadersDir + "light.vert", this->shadersDir + "light.frag");
 
-    this->backpackShader = new ShaderProgram(this->shadersDir + "model.vert", this->shadersDir + "model.frag");
+    this->defaultShader = new ShaderProgram(this->shadersDir + "default.vert", this->shadersDir + "default.frag");
 
     this->lightShader->bind();
     this->lightShader->setVec4("lightColor", this->lightColor);
     this->lightShader->unbind();
 
-    this->defaultShader->bind();
-    this->defaultShader->setVec4("lightColor", this->lightColor);
-    this->defaultShader->setVec3("lightPos", this->lightPos);
-    this->defaultShader->unbind();
+    this->phongShader->bind();
+    this->phongShader->setVec4("lightColor", this->lightColor);
+    this->phongShader->setVec3("lightPos", this->lightPos);
+    this->phongShader->unbind();
 
 
 }
 
 void Application::initObjects() {
 
-    this->square = new Square(textures);
-    this->pyramid = new Pyramid(textures);
+    this->square = new Square({textures["woodContainer"]});
+    this->pyramid = new Pyramid({ textures["awesomeFace"] });
     this->lightCube = new Cube();
 
     this->lightCube->setPosition(this->lightPos);
 
-    this->backpack = new Otter((this->modelsDir + "otter/otter.dae").c_str());
-    this->backpack->setPosition(glm::vec3(0.25f, 0.0f, 0.5f));
+    this->otter = new Otter((this->modelsDir + "otter/otter.dae").c_str());
+    this->otter->setPosition(glm::vec3(0.25f, 0.0f, 0.5f));
     std::cout << "finished initializing objects" << std::endl;
 }
 
@@ -85,25 +84,25 @@ void Application::render() {
     const glm::mat4 viewMat = this->camera->getViewMatrix();
     glm::mat4 modelMat;
 
-    this->defaultShader->bind();
+    this->phongShader->bind();
 
-    this->defaultShader->setMat4("view", viewMat);
-    this->defaultShader->setMat4("proj", projMat);
-    this->defaultShader->setVec3("camPos", this->camera->getPosition());
+    this->phongShader->setMat4("view", viewMat);
+    this->phongShader->setMat4("proj", projMat);
+    this->phongShader->setVec3("camPos", this->camera->getPosition());
 
     modelMat = this->square->getModelMatrix();
-    this->defaultShader->setMat4("model", modelMat);
-    this->square->render(*this->defaultShader);
+    this->phongShader->setMat4("model", modelMat);
+    this->square->render(*this->phongShader);
 
-    //modelMat = this->pyramid->getModelMatrix();
-    //this->defaultShader->setMat4("model", modelMat);
-    //this->pyramid->render(*this->defaultShader);
+    modelMat = this->pyramid->getModelMatrix();
+    this->phongShader->setMat4("model", modelMat);
+    this->pyramid->render(*this->phongShader);
 
-    modelMat = this->backpack->getModelMatrix();
-    this->defaultShader->setMat4("model", modelMat);
-    this->backpack->render(*this->defaultShader);
+    modelMat = this->otter->getModelMatrix();
+    this->phongShader->setMat4("model", modelMat);
+    this->otter->render(*this->phongShader);
 
-    this->defaultShader->unbind();
+    this->phongShader->unbind();
 
     this->lightShader->bind();
 
@@ -121,10 +120,10 @@ void Application::render() {
 void Application::destroy() {
     this->square->destroy();
     this->pyramid->destroy();
-    for (Texture& tex : textures) {
+    for (auto& [key, tex] : textures) {
         tex.destroy();
     }
-    this->defaultShader->destroy();
+    this->phongShader->destroy();
     this->lightShader->destroy();
 }
 

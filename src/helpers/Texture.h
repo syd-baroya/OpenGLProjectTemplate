@@ -15,6 +15,8 @@ public:
 	const char* path;
 	GLuint unit;
 
+	Texture() {};
+
 	Texture(const char* image, const char* texType, GLuint slot);
 
 	// Binds a texture

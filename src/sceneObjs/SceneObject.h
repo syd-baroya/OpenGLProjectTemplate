@@ -13,6 +13,8 @@ class SceneObject {
 
 public:
 	SceneObject() {
+		this->id = 0;
+		this->name = "scene object";
 		this->position = glm::vec3(0);
 		this->orientation = glm::vec3(0);
 		this->scale = glm::vec3(1);
@@ -42,7 +44,7 @@ public:
 	glm::vec3 orientation;
 	glm::vec3 scale;
 
-	std::string name = "";
+	std::string name;
 
 };
 

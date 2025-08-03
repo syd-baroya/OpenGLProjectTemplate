@@ -5,6 +5,7 @@
 #include<filesystem>
 namespace fs = std::filesystem;
 #include <iostream>
+#include <map>
 #include "WindowManager.h"
 #include "sceneObjs/Square.h"
 #include "sceneObjs/Pyramid.h"
@@ -60,14 +61,13 @@ private:
 	SceneObject* square;
 	SceneObject* pyramid;
 	SceneObject* lightCube;
+	SceneObject* otter;
 
-	SceneObject* backpack;
-
-	ShaderProgram* defaultShader;
+	ShaderProgram* phongShader;
 	ShaderProgram* lightShader;
-	ShaderProgram* backpackShader;
+	ShaderProgram* defaultShader;
 
-	std::vector<Texture> textures;
+	std::map<std::string, Texture> textures;
 
 	std::string texturesDir = "../resources/images/";
 	std::string shadersDir = "../resources/shaders/";
