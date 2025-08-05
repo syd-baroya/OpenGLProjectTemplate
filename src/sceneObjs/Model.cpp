@@ -153,8 +153,3 @@ std::vector<std::shared_ptr<Texture>> Model::loadMaterialTextures(aiMaterial* ma
     return textures;
 }
 
-void Model::destroy() {
-    /*for (unsigned int i = 0; i < meshes.size(); i++)
-        meshes[i].destroy();*/
-}
-

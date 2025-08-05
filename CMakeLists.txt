@@ -17,7 +17,7 @@ find_package(glad CONFIG REQUIRED)
 
 
 # Source files
-file(GLOB_RECURSE SOURCES "src/*.cpp" "src/helpers/*.cpp" "src/sceneObjects/*.cpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/helpers/*.cpp" "src/sceneObjs/*.cpp")
 
 # We don't really need to include header and resource files to build, but it's
 # nice to have them show up in IDEs.

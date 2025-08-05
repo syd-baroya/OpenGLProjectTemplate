@@ -16,6 +16,11 @@
 
 namespace fs = std::filesystem;
 
+//change these as needed
+const glm::vec3 CAM_POSITION = glm::vec3(0.0f, 1.5f, 3.0f);
+const glm::vec3 CAM_FORWARD = glm::vec3(0.0f, -0.5f, -1.f);
+const glm::vec3 CAM_UP = glm::vec3(0.0f, 1.0f, 0.0f);
+
 class Time {
 public:
     Time();
@@ -64,8 +69,6 @@ private:
 
     std::shared_ptr<Texture> woodTexture;
     std::shared_ptr<Texture> happyTexture;
-
-	//std::map<std::string, Texture*> textures;
 
     std::string texturesDir = "../resources/images/";
     std::string shadersDir = "../resources/shaders/";

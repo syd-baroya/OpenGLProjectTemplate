@@ -20,7 +20,7 @@ double Time::getDelta() {
 }
 
 Application::Application(unsigned int width, unsigned int height)
-    : camera(glm::vec3(0.0f, 1.5f, 3.0f), glm::vec3(0.0f, -0.5f, -1.f), glm::vec3(0.0f, 1.0f, 0.0f), width, height, PERSPECTIVE),
+    : camera(CAM_POSITION, CAM_FORWARD, CAM_UP, width, height, PERSPECTIVE),
       width(width), height(height)
 {
 

@@ -16,8 +16,6 @@ class Model {
 public:
 	Model(const char* path);
 	void render(ShaderProgram& shader);
-    void destroy();
-
 private:
     // model data
     std::vector<Mesh> meshes;

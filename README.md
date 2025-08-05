@@ -28,7 +28,8 @@ This repository provides a basic OpenGL project template or skeleton, designed t
 
 ### Building the Project
 
-This project uses [CMake Presets](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html) for simplified configuration and building.
+This project uses [CMake Presets](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html) for simplified configuration and building. 
+Navigate to the "OpenGLProjectTemplate/" folder to run these commands.
 
 **1. Configure the project:**
 

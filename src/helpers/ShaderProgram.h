@@ -37,6 +37,7 @@ class ShaderProgram {
 
 		// Deletes the Shader Program
 		void destroy();
+		~ShaderProgram();
 
 	protected:
 		std::string vShaderName;

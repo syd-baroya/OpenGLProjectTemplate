@@ -117,6 +117,11 @@ void ShaderProgram::destroy()
 	glDeleteProgram(ID);
 }
 
+ShaderProgram::~ShaderProgram()
+{
+	this->destroy();
+}
+
 // Checks if the different Shaders have compiled properly
 void ShaderProgram::compileErrors(unsigned int shader, const char* type)
 {

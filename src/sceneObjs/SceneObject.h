@@ -20,6 +20,8 @@ public:
 		this->scale = glm::vec3(1);
 	}
 
+	virtual SceneObject::~SceneObject() {}
+
 	virtual glm::mat4 getModelMatrix() {
 		return  glm::translate(
 					glm::rotate(
@@ -37,7 +39,6 @@ public:
 	}
 	virtual void update(double delta) = 0;
 	virtual void render(ShaderProgram& shader) = 0;
-	virtual void destroy() {};
 
 	int id;
 	glm::vec3 position;
