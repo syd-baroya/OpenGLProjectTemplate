@@ -36,6 +36,7 @@ private:
 class Application : public EventCallbacks {
 public:
     Application(unsigned int width, unsigned int height);
+    void setResourcePath();
     void init();
     void initTextures();
     void initShaders();
@@ -70,9 +71,9 @@ private:
     std::shared_ptr<Texture> woodTexture;
     std::shared_ptr<Texture> happyTexture;
 
-    std::string texturesDir = "../resources/images/";
-    std::string shadersDir = "../resources/shaders/";
-    std::string modelsDir = "../resources/models/";
+    std::string texturesDir;
+    std::string shadersDir;
+    std::string modelsDir;
 
     unsigned int width, height;
     bool mouseClicked = true;

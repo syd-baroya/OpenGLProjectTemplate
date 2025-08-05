@@ -19,11 +19,26 @@ double Time::getDelta() {
     return this->deltaTime;
 }
 
+void Application::setResourcePath() {
+    fs::path currentPath = fs::current_path();
+    while (currentPath.has_parent_path()) {
+        fs::path resourcePath = currentPath / "resources";
+        if (fs::exists(resourcePath) && fs::is_directory(resourcePath)) {
+            this->texturesDir = (resourcePath / "images/").string() + "/";
+            this->shadersDir = (resourcePath / "shaders/").string() + "/";
+            this->modelsDir = (resourcePath / "models/").string() + "/";
+            return;
+        }
+        currentPath = currentPath.parent_path();
+    }
+    throw std::runtime_error("resources directory not found");
+}
+
 Application::Application(unsigned int width, unsigned int height)
     : camera(CAM_POSITION, CAM_FORWARD, CAM_UP, width, height, PERSPECTIVE),
       width(width), height(height)
 {
-
+    setResourcePath();
 }
 
 void Application::init() {
