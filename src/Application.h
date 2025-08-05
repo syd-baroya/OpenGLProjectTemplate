@@ -53,14 +53,14 @@ private:
     glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
 
-	SceneObject* square;
-	SceneObject* pyramid;
-	SceneObject* lightCube;
-	SceneObject* otter;
+	std::unique_ptr<SceneObject> square;
+	std::unique_ptr<SceneObject> pyramid;
+	std::unique_ptr<SceneObject> lightCube;
+	std::unique_ptr<SceneObject> otter;
 
-	ShaderProgram* phongShader;
-	ShaderProgram* lightShader;
-	ShaderProgram* defaultShader;
+	std::unique_ptr<ShaderProgram> phongShader;
+	std::unique_ptr<ShaderProgram> lightShader;
+	std::unique_ptr<ShaderProgram> defaultShader;
 
     std::shared_ptr<Texture> woodTexture;
     std::shared_ptr<Texture> happyTexture;
@@ -74,8 +74,6 @@ private:
     unsigned int width, height;
     bool mouseClicked = true;
     bool mouseMoving = false;
-    float lastX;
-    float lastY;
     bool holdingDownKey = false;
 };
 

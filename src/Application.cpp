@@ -38,11 +38,11 @@ void Application::initTextures() {
 }
 
 void Application::initShaders() {
-    this->phongShader = new ShaderProgram(this->shadersDir + "phong.vert", this->shadersDir + "phong.frag");
+    this->phongShader = std::make_unique<ShaderProgram>(this->shadersDir + "phong.vert", this->shadersDir + "phong.frag");
 
-    this->lightShader = new ShaderProgram(this->shadersDir + "light.vert", this->shadersDir + "light.frag");
+    this->lightShader = std::make_unique<ShaderProgram>(this->shadersDir + "light.vert", this->shadersDir + "light.frag");
 
-    this->defaultShader = new ShaderProgram(this->shadersDir + "default.vert", this->shadersDir + "default.frag");
+    this->defaultShader = std::make_unique<ShaderProgram>(this->shadersDir + "default.vert", this->shadersDir + "default.frag");
 
     this->lightShader->bind();
     this->lightShader->setVec4("lightColor", this->lightColor);
@@ -56,13 +56,13 @@ void Application::initShaders() {
 
 void Application::initObjects() {
 
-    this->square = new Square(std::vector<std::shared_ptr<Texture>>{ this->woodTexture });
-    this->pyramid = new Pyramid(std::vector<std::shared_ptr<Texture>>{ this->happyTexture });
-    this->lightCube = new Cube();
+    this->square = std::make_unique<Square>(std::vector<std::shared_ptr<Texture>>{ this->woodTexture });
+    this->pyramid = std::make_unique<Pyramid>(std::vector<std::shared_ptr<Texture>>{ this->happyTexture });
+    this->lightCube = std::make_unique<Cube>();
 
     this->lightCube->setPosition(this->lightPos);
 
-    this->otter = new Otter((this->modelsDir + "otter/otter.dae").c_str());
+    this->otter = std::make_unique<Otter>((this->modelsDir + "otter/otter.dae").c_str());
     this->otter->setPosition(glm::vec3(0.25f, 0.0f, 0.5f));
     std::cout << "finished initializing objects" << std::endl;
 }

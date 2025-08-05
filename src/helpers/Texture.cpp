@@ -17,7 +17,6 @@ Texture::Texture(const char* image, const char* texType, GLuint slot)
 		std::cerr << "Failed to load image: " << image << std::endl;
 		return;
 	}
-	std::cout << "Loaded image: " << image << ", Width: " << widthImg << ", Height: " << heightImg << ", Channels: " << numColCh << std::endl;
 
 	// Generates an OpenGL texture object
 	glGenTextures(1, &ID);
