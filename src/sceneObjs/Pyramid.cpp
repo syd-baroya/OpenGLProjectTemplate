@@ -1,11 +1,11 @@
 #include "Pyramid.h"
 
 Pyramid::Pyramid() : SceneObject() {
-    mesh = new Mesh(vertices, indices, std::vector<Texture>());
+    mesh = std::make_unique<Mesh>(vertices, indices, std::vector<Texture>());
 }
 
 Pyramid::Pyramid(std::vector<Texture> textures) {
-    mesh = new Mesh(vertices, indices, textures);
+    mesh = std::make_unique<Mesh>(vertices, indices, textures);
 }
 
 void Pyramid::update(double delta) {
@@ -14,8 +14,4 @@ void Pyramid::update(double delta) {
 
 void Pyramid::render(ShaderProgram& shader) {
     mesh->render(shader);
-}
-
-void Pyramid::destroy() {
-    //mesh->destroy();
 }

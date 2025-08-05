@@ -37,7 +37,7 @@ public:
 	}
 	virtual void update(double delta) = 0;
 	virtual void render(ShaderProgram& shader) = 0;
-	virtual void destroy() = 0;
+	virtual void destroy() {};
 
 	int id;
 	glm::vec3 position;

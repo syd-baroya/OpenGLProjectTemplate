@@ -12,10 +12,8 @@ public:
 
     void render(ShaderProgram& shader);
 
-    void destroy();
-
 private:
-    Model* model;
+    std::unique_ptr<Model> model;
 };
 
 #endif

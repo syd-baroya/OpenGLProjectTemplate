@@ -22,8 +22,6 @@ public:
 	Mesh(const std::vector <Vertex>& vertices, const std::vector <GLuint>& indices, const std::vector <Texture>& textures);
 	// Draws the mesh
 	void render(ShaderProgram& shader);
-
-	void destroy();
 };
 
 #endif

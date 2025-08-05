@@ -15,10 +15,8 @@ public:
 
     void render(ShaderProgram& shader);
 
-    void destroy();
-
 private:
-    Mesh* mesh;
+    std::unique_ptr<Mesh> mesh;
     // Vertices coordinates
     std::vector<Vertex> vertices =
     { //     COORDINATES     /        COLORS          /   NORMALS    /        TexCoord       //
