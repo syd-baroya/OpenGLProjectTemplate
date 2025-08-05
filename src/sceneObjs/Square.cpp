@@ -17,5 +17,5 @@ void Square::render(ShaderProgram& shader) {
 }
 
 void Square::destroy() {
-    mesh->destroy();
+    //mesh->destroy();
 }

@@ -6,6 +6,10 @@ VAO::VAO()
 	glGenVertexArrays(1, &ID);
 }
 
+VAO::~VAO() {
+	destroy();
+}
+
 // Links a VBO Attribute such as a position or color to the VAO
 void VAO::linkAttrib(VBO& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizei stride, void* offset)
 {

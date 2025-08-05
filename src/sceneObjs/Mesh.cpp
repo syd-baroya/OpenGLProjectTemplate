@@ -1,37 +1,31 @@
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::vector <Texture>& textures)
+Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const std::vector<Texture>& textures)
 {
 	this->vertices = vertices;
 	this->indices = indices;
 	this->textures = textures;
 
-	// Generates Vertex Array Object and binds it
-	vao = new VAO();
+	vao = std::make_unique<VAO>();
 	vao->bind();
 
-	// Generates Vertex Buffer Object and links it to vertices
-	vbo = new VBO(vertices);
-	// Generates Element Buffer Object and links it to indices
-	ebo = new EBO(indices);
+	vbo = std::make_unique<VBO>(vertices);
+	ebo = std::make_unique<EBO>(indices);
 
-	// Links VBO attributes such as coordinates and colors to VAO
 	vao->linkAttrib(*vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
 	vao->linkAttrib(*vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float)));
 	vao->linkAttrib(*vbo, 2, 3, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float)));
 	vao->linkAttrib(*vbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void*)(9 * sizeof(float)));
-	// Unbind all to prevent accidentally modifying them
+
 	vao->unbind();
 	vbo->unbind();
 	ebo->unbind();
 }
 
-
 void Mesh::render(ShaderProgram& shader)
 {
 	vao->bind();
 
-	// Keep track of how many of each type of textures we have
 	unsigned int numDiffuse = 0;
 	unsigned int numSpecular = 0;
 	unsigned int numNormal = 0;
@@ -54,7 +48,6 @@ void Mesh::render(ShaderProgram& shader)
 		textures[i].bind();
 	}
 
-	// Draw the actual mesh
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
 	for (unsigned int j = 0; j < textures.size(); j++)
@@ -62,10 +55,4 @@ void Mesh::render(ShaderProgram& shader)
 		textures[j].unbind();
 	}
 	vao->unbind();
-}
-
-void Mesh::destroy() {
-	vao->destroy();
-	vbo->destroy();
-	ebo->destroy();
 }

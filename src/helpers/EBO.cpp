@@ -4,8 +4,12 @@ EBO::EBO()
 {
 	glGenBuffers(1, &ID);
 }
+EBO::~EBO() {
+	destroy();
+}
+
 // Constructor that generates a Elements Buffer Object and links it to indices
-EBO::EBO(std::vector<GLuint>& indices)
+EBO::EBO(const std::vector<GLuint>& indices)
 {
 	glGenBuffers(1, &ID);
 	bind();

@@ -13,5 +13,5 @@ void Otter::render(ShaderProgram& shader) {
 }
 
 void Otter::destroy() {
-    model->destroy();
+    //model->destroy();
 }

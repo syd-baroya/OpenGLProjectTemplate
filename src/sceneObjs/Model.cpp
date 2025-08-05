@@ -154,7 +154,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 }
 
 void Model::destroy() {
-    for (unsigned int i = 0; i < meshes.size(); i++)
-        meshes[i].destroy();
+    /*for (unsigned int i = 0; i < meshes.size(); i++)
+        meshes[i].destroy();*/
 }
 

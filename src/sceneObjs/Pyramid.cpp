@@ -17,5 +17,5 @@ void Pyramid::render(ShaderProgram& shader) {
 }
 
 void Pyramid::destroy() {
-    mesh->destroy();
+    //mesh->destroy();
 }

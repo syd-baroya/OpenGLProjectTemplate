@@ -28,7 +28,8 @@ public:
 	// Reference ID of the Vertex Buffer Object
 	GLuint ID;
 	// Constructor that generates a Vertex Buffer Object and links it to vertices
-	VBO(std::vector<Vertex>& vertices);
+	VBO(const std::vector<Vertex>& vertices);
+	~VBO();
 	VBO();
 	// Binds the VBO
 	void bind();

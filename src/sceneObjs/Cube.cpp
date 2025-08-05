@@ -13,5 +13,5 @@ void Cube::render(ShaderProgram& shader) {
 }
 
 void Cube::destroy() {
-    mesh->destroy();
+    //mesh->destroy();
 }
