@@ -48,11 +48,12 @@ class Camera {
 		glm::mat4 getProjectionMatrix();
 		glm::vec3 getPosition();
 
+		void resize(int width, int height);
+
 	private:
 		glm::vec3 position;
 		glm::vec3 forward;
 		glm::vec3 up;
-		glm::vec3 right;
 		Projection projType;
 		float screen_width;
 		float screen_height;

@@ -113,3 +113,8 @@ void Camera::moveUp(float velocity) {
 void Camera::moveDown(float velocity) {
 	this->position -= velocity * this->up;
 }
+
+void Camera::resize(int width, int height) {
+	this->screen_width = width;
+	this->screen_height = height;
+}

@@ -9,7 +9,7 @@ class Pyramid : public SceneObject {
 
 public:
     Pyramid();
-    Pyramid(std::vector<Texture> textures);
+    Pyramid(std::vector<std::shared_ptr<Texture>>& textures);
 
     void update(double delta);
 

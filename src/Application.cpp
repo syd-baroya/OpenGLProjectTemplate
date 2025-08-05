@@ -1,5 +1,5 @@
 #include "Application.h"
-
+#include <memory>
 
 Time::Time() {
     this->currTime = glfwGetTime();
@@ -8,11 +8,9 @@ Time::Time() {
 }
 
 void Time::update() {
-    // Simple timer
     this->currTime = glfwGetTime();
     this->deltaTime = this->currTime - this->prevTime;
-    if (this->deltaTime >= 1 / 60)
-    {
+    if (this->deltaTime >= 1.0 / 60.0) {
         this->prevTime = this->currTime;
     }
 }
@@ -21,21 +19,22 @@ double Time::getDelta() {
     return this->deltaTime;
 }
 
-void Application::init(unsigned int width, unsigned int height) {
-    this->time = new Time();
-    this->camera = new Camera(glm::vec3(0.0f, 1.5f, 3.0f), glm::vec3(0.0f, -0.5f, -1.f), glm::vec3(0.0f, 1.0f, 0.0f), width, height, PERSPECTIVE);
+Application::Application(unsigned int width, unsigned int height)
+    : camera(glm::vec3(0.0f, 1.5f, 3.0f), glm::vec3(0.0f, -0.5f, -1.f), glm::vec3(0.0f, 1.0f, 0.0f), width, height, PERSPECTIVE),
+      width(width), height(height)
+{
 
-    this->width = width;
-    this->height = height;
+}
 
+void Application::init() {
     initTextures();
     initShaders();
     initObjects();
 }
 
 void Application::initTextures() {
-    textures.insert({ "woodContainer", Texture((texturesDir + "woodContainer_diffuse.jpg").c_str(), "diffuse", 0) });
-    textures.insert({ "awesomeFace", Texture((texturesDir + "awesomeface_diffuse.png").c_str(), "diffuse", 1) });
+    this->woodTexture = std::make_shared<Texture>((texturesDir + "woodContainer_diffuse.jpg").c_str(), "diffuse", 0);
+    this->happyTexture = std::make_shared<Texture>((texturesDir + "awesomeface_diffuse.png").c_str(), "diffuse", 1);
 }
 
 void Application::initShaders() {
@@ -53,14 +52,12 @@ void Application::initShaders() {
     this->phongShader->setVec4("lightColor", this->lightColor);
     this->phongShader->setVec3("lightPos", this->lightPos);
     this->phongShader->unbind();
-
-
 }
 
 void Application::initObjects() {
 
-    this->square = new Square({textures["woodContainer"]});
-    this->pyramid = new Pyramid({ textures["awesomeFace"] });
+    this->square = new Square(std::vector<std::shared_ptr<Texture>>{ this->woodTexture });
+    this->pyramid = new Pyramid(std::vector<std::shared_ptr<Texture>>{ this->happyTexture });
     this->lightCube = new Cube();
 
     this->lightCube->setPosition(this->lightPos);
@@ -71,24 +68,23 @@ void Application::initObjects() {
 }
 
 void Application::update() {
-    this->time->update();
+    this->time.update();
 
-    double delta = this->time->getDelta();
+    double delta = this->time.getDelta();
     this->square->update(delta);
     this->pyramid->update(delta);
 }
 
 void Application::render() {
-
-    const glm::mat4 projMat = this->camera->getProjectionMatrix();
-    const glm::mat4 viewMat = this->camera->getViewMatrix();
+    const glm::mat4 projMat = this->camera.getProjectionMatrix();
+    const glm::mat4 viewMat = this->camera.getViewMatrix();
     glm::mat4 modelMat;
 
     this->phongShader->bind();
 
     this->phongShader->setMat4("view", viewMat);
     this->phongShader->setMat4("proj", projMat);
-    this->phongShader->setVec3("camPos", this->camera->getPosition());
+    this->phongShader->setVec3("camPos", this->camera.getPosition());
 
     modelMat = this->square->getModelMatrix();
     this->phongShader->setMat4("model", modelMat);
@@ -114,22 +110,9 @@ void Application::render() {
     this->lightCube->render(*this->lightShader);
 
     this->lightShader->unbind();
-
 }
 
-void Application::destroy() {
-    this->square->destroy();
-    this->pyramid->destroy();
-    for (auto& [key, tex] : textures) {
-        tex.destroy();
-    }
-    this->phongShader->destroy();
-    this->lightShader->destroy();
-}
-
-void Application::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    // used keys: escape z
+void Application::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
@@ -141,27 +124,27 @@ void Application::keyCallback(GLFWwindow* window, int key, int scancode, int act
     }
 
     if (key == GLFW_KEY_W && (action == GLFW_PRESS || this->holdingDownKey)) {
-        this->camera->processMovement(FORWARD, this->time->getDelta());
+        this->camera.processMovement(FORWARD, this->time.getDelta());
         this->holdingDownKey = true;
     }
     if (key == GLFW_KEY_S && (action == GLFW_PRESS || this->holdingDownKey)) {
-        this->camera->processMovement(BACKWARD, this->time->getDelta());
+        this->camera.processMovement(BACKWARD, this->time.getDelta());
         this->holdingDownKey = true;
     }
     if (key == GLFW_KEY_A && (action == GLFW_PRESS || this->holdingDownKey)) {
-        this->camera->processMovement(LEFT, this->time->getDelta());
+        this->camera.processMovement(LEFT, this->time.getDelta());
         this->holdingDownKey = true;
     }
     if (key == GLFW_KEY_D && (action == GLFW_PRESS || this->holdingDownKey)) {
-        this->camera->processMovement(RIGHT, this->time->getDelta());
+        this->camera.processMovement(RIGHT, this->time.getDelta());
         this->holdingDownKey = true;
     }
     if (key == GLFW_KEY_E && (action == GLFW_PRESS || this->holdingDownKey)) {
-        this->camera->processMovement(UP, this->time->getDelta());
+        this->camera.processMovement(UP, this->time.getDelta());
         this->holdingDownKey = true;
     }
     if (key == GLFW_KEY_C && (action == GLFW_PRESS || this->holdingDownKey)) {
-        this->camera->processMovement(DOWN, this->time->getDelta());
+        this->camera.processMovement(DOWN, this->time.getDelta());
         this->holdingDownKey = true;
     }
     if (action == GLFW_RELEASE) {
@@ -169,44 +152,35 @@ void Application::keyCallback(GLFWwindow* window, int key, int scancode, int act
     }
 }
 
-void Application::scrollCallback(GLFWwindow* window, double deltaX, double deltaY)
-{
-    this->camera->processZoom(deltaY);
+void Application::scrollCallback(GLFWwindow* window, double deltaX, double deltaY) {
+    this->camera.processZoom(deltaY);
 }
 
-void Application::mouseCallback(GLFWwindow* window, int button, int action, int mods)
-{
-    if (action == GLFW_PRESS)
-    {
-        // Hides mouse cursor
+void Application::mouseCallback(GLFWwindow* window, int button, int action, int mods) {
+    if (action == GLFW_PRESS) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-
-        // Prevents camera from jumping on the first click
-        if (this->mouseClicked)
-        {
+        if (this->mouseClicked) {
             glfwSetCursorPos(window, (this->width / 2.f), (this->height / 2.f));
             this->mouseClicked = false;
         }
-
-    } else if (action == GLFW_RELEASE)
-    {
+    } else if (action == GLFW_RELEASE) {
         this->mouseClicked = true;
-        // Unhides cursor since camera is not looking around anymore
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
-
 }
 
-void Application::cursorPosCallback(GLFWwindow* window, double xposIn, double yposIn)
-{
-    if (!this->mouseClicked)
-    {
-        this->camera->processLook(xposIn, yposIn, this->time->getDelta());
+void Application::cursorPosCallback(GLFWwindow* window, double xposIn, double yposIn) {
+    if (!this->mouseClicked) {
+        this->camera.processLook(xposIn, yposIn, this->time.getDelta());
         glfwSetCursorPos(window, (this->width / 2.f), (this->height / 2.f));
     }
 }
 
-void Application::resizeCallback(GLFWwindow* window, int width, int height)
-{
+void Application::resizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
+    this->width = width;
+    this->height = height;
+    this->camera.resize(width, height);
 }
+
+void Application::destroy() {}

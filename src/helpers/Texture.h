@@ -18,7 +18,7 @@ public:
 	Texture() {};
 
 	Texture(const char* image, const char* texType, GLuint slot);
-	//~Texture();
+	~Texture();
 
 	// Binds a texture
 	void bind();

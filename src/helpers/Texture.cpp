@@ -136,10 +136,10 @@ Texture::Texture(const char* image, const char* texType, GLuint slot)
 	if (error != GL_NO_ERROR) std::cerr << "OpenGL Error after glBindTexture (unbinding): " << error << std::endl;
 }
 
-//Texture::~Texture()
-//{
-//	destroy();
-//}
+Texture::~Texture()
+{
+	destroy();
+}
 
 void Texture::bind()
 {

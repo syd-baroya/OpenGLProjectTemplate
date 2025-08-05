@@ -11,7 +11,7 @@ class Square : public SceneObject {
 
 public:
     Square();
-    Square::Square(std::vector<Texture> textures);
+    Square::Square(std::vector<std::shared_ptr<Texture>>& textures);
 
     void update(double delta);
 

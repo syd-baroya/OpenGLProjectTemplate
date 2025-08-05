@@ -2,8 +2,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include<filesystem>
-namespace fs = std::filesystem;
+#include <filesystem>
 #include <iostream>
 #include <map>
 #include "WindowManager.h"
@@ -11,52 +10,48 @@ namespace fs = std::filesystem;
 #include "sceneObjs/Pyramid.h"
 #include "sceneObjs/Cube.h"
 #include "helpers/Texture.h"
-#include "helpers/Camera.h"	
+#include "helpers/Camera.h"
 #include <glm/glm.hpp>
 #include "sceneObjs/Otter.h"
 
+namespace fs = std::filesystem;
 
 class Time {
-	public:
-		Time();
-		void update();
-		double getDelta();
-
-	private:
-		double prevTime;
-		double deltaTime;
-		double currTime;
-};
-
-class Application : public EventCallbacks
-{
-
-	public:
-		void init(unsigned int width, unsigned int height);
-		void initTextures();
-		void initShaders();
-		void initObjects();
-		void update();
-		void render();
-		void destroy();
-
-		//inherited functions
-		void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
-		void mouseCallback(GLFWwindow* window, int button, int action, int mods);
-
-		void cursorPosCallback(GLFWwindow* window, double xpos, double ypos);
-
-		void scrollCallback(GLFWwindow* window, double dX, double dY);
-
-		void resizeCallback(GLFWwindow* window, int in_width, int in_height);
+public:
+    Time();
+    void update();
+    double getDelta();
 
 private:
-	Time* time;
-	Camera* camera;
+    double prevTime;
+    double deltaTime;
+    double currTime;
+};
 
-	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
+class Application : public EventCallbacks {
+public:
+    Application(unsigned int width, unsigned int height);
+    void init();
+    void initTextures();
+    void initShaders();
+    void initObjects();
+    void update();
+    void render();
+    void destroy();
+
+    // inherited functions
+    void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) override;
+    void mouseCallback(GLFWwindow* window, int button, int action, int mods) override;
+    void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) override;
+    void scrollCallback(GLFWwindow* window, double dX, double dY) override;
+    void resizeCallback(GLFWwindow* window, int in_width, int in_height) override;
+
+private:
+    Time time;
+    Camera camera;
+
+    glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
 
 	SceneObject* square;
 	SceneObject* pyramid;
@@ -67,18 +62,21 @@ private:
 	ShaderProgram* lightShader;
 	ShaderProgram* defaultShader;
 
-	std::map<std::string, Texture> textures;
+    std::shared_ptr<Texture> woodTexture;
+    std::shared_ptr<Texture> happyTexture;
 
-	std::string texturesDir = "../resources/images/";
-	std::string shadersDir = "../resources/shaders/";
-	std::string modelsDir = "../resources/models/";
+	//std::map<std::string, Texture*> textures;
 
-	unsigned int width, height;
-	bool mouseClicked = true;
-	bool mouseMoving = false;
-	float lastX;
-	float lastY;
-	float holdingDownKey = false;
+    std::string texturesDir = "../resources/images/";
+    std::string shadersDir = "../resources/shaders/";
+    std::string modelsDir = "../resources/models/";
+
+    unsigned int width, height;
+    bool mouseClicked = true;
+    bool mouseMoving = false;
+    float lastX;
+    float lastY;
+    bool holdingDownKey = false;
 };
 
 #endif

@@ -1,10 +1,11 @@
 #include "Square.h"
+#include <memory>
 
 Square::Square() : SceneObject() {
-    mesh = std::make_unique<Mesh>(vertices, indices, std::vector<Texture>());
+    mesh = std::make_unique<Mesh>(vertices, indices, std::vector<std::shared_ptr<Texture>>());
 }
 
-Square::Square(std::vector<Texture> textures) {
+Square::Square(std::vector<std::shared_ptr<Texture>>& textures) {
     mesh = std::make_unique<Mesh>(vertices, indices, textures);
 }
 

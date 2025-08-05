@@ -11,13 +11,13 @@ const unsigned int height = 800;
 int main(void)
 {
   
-    Application* application = new Application();
+    Application* application = new Application(width, height);
     WindowManager* windowManager = new WindowManager();
 
     windowManager->init(width, height);
     windowManager->setEventCallbacks(application);
 
-    application->init(width, height);
+    application->init();
 
     glEnable(GL_DEPTH_TEST);
 

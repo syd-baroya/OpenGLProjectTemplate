@@ -1,11 +1,9 @@
 #include "Mesh.h"
 
-Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const std::vector<Texture>& textures)
+#include <memory>
+Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const std::vector<std::shared_ptr<Texture>>& textures)
+: vertices(vertices), indices(indices), textures(textures)
 {
-	this->vertices = vertices;
-	this->indices = indices;
-	this->textures = textures;
-
 	vao = std::make_unique<VAO>();
 	vao->bind();
 
@@ -34,7 +32,7 @@ void Mesh::render(ShaderProgram& shader)
 	for (unsigned int i = 0; i < textures.size(); i++)
 	{
 		std::string num;
-		std::string type = textures[i].type;
+		std::string type = textures[i]->type;
 		if (type == "diffuse") {
 			num = std::to_string(numDiffuse++);
 		} else if (type == "specular") {
@@ -44,15 +42,15 @@ void Mesh::render(ShaderProgram& shader)
 		} else if (type == "height") {
 			num = std::to_string(numHeight++);
 		}
-		shader.setInt((type + num).c_str(), textures[i].unit);
-		textures[i].bind();
+		shader.setInt((type + num).c_str(), textures[i]->unit);
+		textures[i]->bind();
 	}
 
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
 	for (unsigned int j = 0; j < textures.size(); j++)
 	{
-		textures[j].unbind();
+		textures[j]->unbind();
 	}
 	vao->unbind();
 }

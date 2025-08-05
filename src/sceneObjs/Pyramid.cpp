@@ -1,10 +1,11 @@
 #include "Pyramid.h"
+#include <memory>
 
 Pyramid::Pyramid() : SceneObject() {
-    mesh = std::make_unique<Mesh>(vertices, indices, std::vector<Texture>());
+    mesh = std::make_unique<Mesh>(vertices, indices, std::vector<std::shared_ptr<Texture>>());
 }
 
-Pyramid::Pyramid(std::vector<Texture> textures) {
+Pyramid::Pyramid(std::vector<std::shared_ptr<Texture>>& textures) {
     mesh = std::make_unique<Mesh>(vertices, indices, textures);
 }
 
